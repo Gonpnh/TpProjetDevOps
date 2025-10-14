@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout
+      # 1️⃣ Checkout du code
       - uses: actions/checkout@v4
 
       # 2️⃣ Installer JDK 17
@@ -20,7 +20,7 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      # 3️⃣ Build et tests Maven
+      # 3️⃣ Build + tests Maven
       - name: Build and Test with Maven
         run: mvn -B clean verify
 
