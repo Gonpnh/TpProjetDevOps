@@ -24,6 +24,9 @@ jobs:
       - name: Build and Test with Maven
         run: mvn -B clean verify
 
+      - name: List test reports
+        run: ls -R target/surefire-reports
+
       # 4️⃣ Publier le rapport JUnit
       - name: Publish Test Report
         if: success() || failure()
@@ -33,4 +36,6 @@ jobs:
           path: |
             **/target/surefire-reports/*.xml
             **/target/failsafe-reports/*.xml
+            target/failsafe-reports/*.xml
+            ProjetJavaYTG/target/surefire-reports/*.xml
           reporter: java-junit
