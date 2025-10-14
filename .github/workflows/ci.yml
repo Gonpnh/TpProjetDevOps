@@ -11,19 +11,17 @@ jobs:
     # --- Service MariaDB ---
     services:
       mariadb:
-        image: mariadb:11.1
+        image: mariadb:10.11
         env:
           MARIADB_ROOT_PASSWORD: root
           MARIADB_DATABASE: testdb
           MARIADB_USER: test
           MARIADB_PASSWORD: test
-        ports:
-          - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping --silent"
-          --health-interval=10s
+          --health-cmd="mysqladmin ping -h localhost -u root -proot"
+          --health-interval=5s
           --health-timeout=5s
-          --health-retries=5
+          --health-retries=10
 
     env:
       DB_URL: jdbc:mariadb://localhost:3306/testdb
