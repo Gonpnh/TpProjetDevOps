@@ -1,12 +1,12 @@
 package ytg.projetjavaytg.Controllers;
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ytg.projetjavaytg.DTO.RegisterForm;
 import ytg.projetjavaytg.Services.RegisterService;
 
-@RestController
-@RequestMapping("/register")
+@Controller
 public class RegisterController {
     private final RegisterService registerService;
 
@@ -14,14 +14,21 @@ public class RegisterController {
         this.registerService = registerService;
     }
 
-    @PostMapping
-    public ResponseEntity<?> register(@RequestBody RegisterForm form) {
+    @GetMapping("/register")
+    public String showRegisterForm(Model model) {
+        model.addAttribute("registerForm", new RegisterForm());
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String register(@ModelAttribute RegisterForm form, Model model) {
         try {
             registerService.register(form);
-            return ResponseEntity.ok("Inscription réussie !");
+            return "redirect:/login?registered=true";
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("registerForm", form);
+            return "register";
         }
     }
 }
-

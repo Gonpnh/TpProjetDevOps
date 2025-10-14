@@ -34,9 +34,10 @@ public class RegisterService {
         utilisateur.setPrenom(form.getPrenom());
         utilisateur.setNom(form.getNom());
         utilisateur.setPassword(passwordEncoder.encode(form.getPassword()));
+        utilisateur.setRole("ROLE_TUTEUR");
+        utilisateur.setEnabled(true);
         utilisateur.setDateCreation(Instant.now());
         utilisateur.setDateDerniereConnexion(null);
         utilisateurRepository.save(utilisateur);
     }
 }
-
