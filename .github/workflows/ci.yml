@@ -8,12 +8,33 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    steps:
-      # 1️⃣ Récupération du code
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    # --- Service MariaDB ---
+    services:
+      mariadb:
+        image: mariadb:11.1
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: testdb
+          MARIADB_USER: test
+          MARIADB_PASSWORD: test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
-      # 2️⃣ Installation de Java 17 (Temurin)
+    env:
+      DB_URL: jdbc:mariadb://localhost:3306/testdb
+      DB_USER: test
+      DB_PASSWORD: test
+
+    steps:
+      # Checkout du code
+      - uses: actions/checkout@v4
+
+      # Installer JDK 17
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -21,11 +42,15 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      # 3️⃣ Build et tests Maven
+      # Build + tests Maven
       - name: Build and Test with Maven
         run: mvn -B clean verify
+        env:
+          SPRING_DATASOURCE_URL: ${{ env.DB_URL }}
+          SPRING_DATASOURCE_USERNAME: ${{ env.DB_USER }}
+          SPRING_DATASOURCE_PASSWORD: ${{ env.DB_PASSWORD }}
 
-      # 4️⃣ Rapport des tests (succès ou échec)
+      # Test report
       - name: Publish Test Report
         if: success() || failure()
         uses: dorny/test-reporter@v1
