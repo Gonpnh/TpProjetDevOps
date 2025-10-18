@@ -6,7 +6,7 @@ import ytg.projetjavaytg.Repositories.EvaluationRepository;
 import ytg.projetjavaytg.Services.EvaluationService;
 
 @RestController
-@RequestMapping("/api/evaluation")
+@RequestMapping("/api/evaluations")
 public class EvaluationController {
 
     private final EvaluationService evaluationService;

@@ -6,7 +6,7 @@ import ytg.projetjavaytg.Repositories.ApprentiRepository;
 import ytg.projetjavaytg.Services.ApprentiService;
 
 @RestController
-@RequestMapping("/api/apprenti")
+@RequestMapping("/api/apprentis")
 public class ApprentiController {
 
     private final ApprentiService apprentiService;
@@ -14,4 +14,5 @@ public class ApprentiController {
     public ApprentiController(ApprentiService apprentiService) {
         this.apprentiService = apprentiService;
     }
+
 }

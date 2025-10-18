@@ -6,7 +6,7 @@ import ytg.projetjavaytg.Repositories.EntrepriseRepository;
 import ytg.projetjavaytg.Services.EntrepriseService;
 
 @RestController
-@RequestMapping("/api/entreprise")
+@RequestMapping("/api/entreprises")
 public class EntrepriseController {
 
     private final EntrepriseService entrepriseService;

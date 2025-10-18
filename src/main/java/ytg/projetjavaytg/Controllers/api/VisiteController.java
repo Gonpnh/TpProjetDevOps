@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ytg.projetjavaytg.Services.VisiteService;
 
 @RestController
-@RequestMapping("/api/visite")
+@RequestMapping("/api/visites")
 public class VisiteController {
 
     private final VisiteService visiteService;

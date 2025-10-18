@@ -6,7 +6,7 @@ import ytg.projetjavaytg.Repositories.MaitreApprentissageRepository;
 import ytg.projetjavaytg.Services.MaitreApprentissageService;
 
 @RestController
-@RequestMapping("/api/maitreapprentissage")
+@RequestMapping("/api/maitreapprentissages")
 public class MaitreApprentissageController {
 
     private final MaitreApprentissageService maitreApprentissageService;

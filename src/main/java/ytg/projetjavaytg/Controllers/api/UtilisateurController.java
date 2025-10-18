@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ytg.projetjavaytg.Repositories.UtilisateurRepository;
 
 @RestController
-@RequestMapping("/api/utilisateur")
+@RequestMapping("/api/utilisateurs")
 public class UtilisateurController {
 
     private final UtilisateurRepository utilisateurRepository;
