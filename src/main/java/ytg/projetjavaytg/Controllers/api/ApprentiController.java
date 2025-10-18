@@ -1,9 +1,12 @@
 package ytg.projetjavaytg.Controllers.api;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ytg.projetjavaytg.Repositories.ApprentiRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import ytg.projetjavaytg.Models.Apprenti;
 import ytg.projetjavaytg.Services.ApprentiService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/apprentis")
@@ -13,6 +16,25 @@ public class ApprentiController {
 
     public ApprentiController(ApprentiService apprentiService) {
         this.apprentiService = apprentiService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Apprenti>> getAllApprentis() {
+        List<Apprenti> apprentis = apprentiService.getAllApprentis();
+        return ResponseEntity.ok(apprentis);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Apprenti> getApprentiById(@PathVariable Long id) {
+        return apprentiService.getApprentiById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public ResponseEntity<Apprenti> createApprenti(@RequestBody Apprenti apprenti) {
+        Apprenti createdApprenti = apprentiService.createApprenti(apprenti);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdApprenti);
     }
 
 }
