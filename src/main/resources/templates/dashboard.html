@@ -4,72 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - ASTA</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-
-        .header {
-            background-color: #2196F3;
-            color: white;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header h1 {
-            margin: 0;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logout-btn {
-            background-color: white;
-            color: #2196F3;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 3px;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .logout-btn:hover {
-            background-color: #f0f0f0;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-        }
-
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        .card h2 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .card p {
-            color: #666;
-            font-size: 18px;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
 </head>
 <body>
     <div class="header">
@@ -83,9 +18,65 @@
     </div>
 
     <div class="container">
-        <div class="card">
-            <h2>✓ Connexion réussie !</h2>
-            <p>Bienvenue dans l'application ASTA</p>
+        <div class="quick-actions">
+            <a th:href="@{/entreprises}" class="action-card">
+                <h3>Entreprises</h3>
+                <p>Gérer les entreprises</p>
+            </a>
+            <a th:href="@{/maitres}" class="action-card">
+                <h3>Maîtres d'apprentissage</h3>
+                <p>Gérer les maîtres</p>
+            </a>
+            <a th:href="@{/apprentis/create}" class="action-card">
+                <h3>Nouvel apprenti</h3>
+                <p>Ajouter un apprenti</p>
+            </a>
+        </div>
+
+        <div class="page-header">
+            <div class="header-content">
+                <h2>Liste des apprentis - Année <span th:text="${anneeAcademique}">2024-2025</span></h2>
+            </div>
+        </div>
+
+        <div th:if="${apprentis.isEmpty()}" class="alert-empty">
+            La liste est vide. Ajoutez au moins un apprenti
+        </div>
+
+        <div th:if="${!apprentis.isEmpty()}" class="table-container">
+            <table class="apprentis-table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Email</th>
+                        <th>Niveau</th>
+                        <th>Programme</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="apprenti : ${apprentis}">
+                        <td th:text="${apprenti.nom}">Doe</td>
+                        <td th:text="${apprenti.prenom}">John</td>
+                        <td th:text="${apprenti.email}">john.doe@example.com</td>
+                        <td th:text="${apprenti.niveau}">I1</td>
+                        <td th:text="${apprenti.programme}">Ingénieur</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a th:href="@{/apprentis/{id}(id=${apprenti.id})}" class="btn-details">
+                                    Voir détails
+                                </a>
+                                <form th:action="@{/apprentis/{id}/delete(id=${apprenti.id})}" method="post" style="display: inline;">
+                                    <button type="submit" class="btn-delete" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet apprenti ?');">
+                                        Supprimer
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </body>

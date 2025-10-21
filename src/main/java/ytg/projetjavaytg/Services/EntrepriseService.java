@@ -29,4 +29,9 @@ public class EntrepriseService {
     public Entreprise createEntreprise(Entreprise entreprise) {
         return entrepriseRepository.save(entreprise);
     }
+
+    @Transactional
+    public void deleteEntreprise(Long id) {
+        entrepriseRepository.deleteById(id);
+    }
 }

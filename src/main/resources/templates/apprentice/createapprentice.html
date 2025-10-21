@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un apprenti - ASTA</title>
+    <link rel="stylesheet" th:href="@{/css/create-apprentice.css}">
+</head>
+<body>
+    <div class="header">
+        <h1>ASTA Dashboard</h1>
+        <div class="user-info">
+            <a th:href="@{/dashboard}" class="back-btn">← Retour au tableau de bord</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Ajouter un apprenti</h2>
+        </div>
+
+        <div th:if="${error}" class="alert alert-error">
+            <span th:text="${error}"></span>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success">
+            <span th:text="${success}"></span>
+        </div>
+
+        <form class="form-card" method="post" th:action="@{/apprentis/create}">
+            <div class="section">
+                <h3>Informations personnelles</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nom">Nom <span class="required">*</span></label>
+                        <input type="text" id="nom" name="nom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="prenom">Prénom <span class="required">*</span></label>
+                        <input type="text" id="prenom" name="prenom" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telephone">Téléphone</label>
+                        <input type="tel" id="telephone" name="telephone" placeholder="0612345678">
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <h3>Informations académiques</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="anneeAcademique">Année académique <span class="required">*</span></label>
+                        <input type="text" id="anneeAcademique" name="anneeAcademique" value="2025-2026" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="niveau">Niveau</label>
+                        <select id="niveau" name="niveau">
+                            <option value="I1">I1</option>
+                            <option value="I2">I2</option>
+                            <option value="I3">I3</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="programme">Programme</label>
+                        <input type="text" id="programme" name="programme" placeholder="Ex: Ingénieur">
+                    </div>
+                    <div class="form-group">
+                        <label for="majeure">Majeure</label>
+                        <input type="text" id="majeure" name="majeure" placeholder="Ex: Informatique">
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <h3>Entreprise et encadrement</h3>
+                <div class="form-group">
+                    <label for="entrepriseId">Entreprise <span class="required">*</span></label>
+                    <select id="entrepriseId" name="entrepriseId" required>
+                        <option value="">-- Sélectionner une entreprise --</option>
+                        <option th:each="entreprise : ${entreprises}"
+                                th:value="${entreprise.id}"
+                                th:text="${entreprise.raisonSociale}">
+                        </option>
+                    </select>
+                    <p class="help-text">Si l'entreprise n'existe pas, <a th:href="@{/entreprises/create}" target="_blank">créez-la d'abord</a></p>
+                </div>
+                <div class="form-group">
+                    <label for="maitreApprentissageId">Maître d'apprentissage <span class="required">*</span></label>
+                    <select id="maitreApprentissageId" name="maitreApprentissageId" required>
+                        <option value="">-- Sélectionner un maître d'apprentissage --</option>
+                        <option th:each="maitre : ${maitres}"
+                                th:value="${maitre.id}"
+                                th:text="${maitre.prenom + ' ' + maitre.nom + ' (' + maitre.entreprise.raisonSociale + ')'}">
+                        </option>
+                    </select>
+                    <p class="help-text">Si le maître n'existe pas, <a th:href="@{/maitres/create}" target="_blank">créez-le d'abord</a></p>
+                </div>
+                <div class="form-group">
+                    <label for="tuteurEnseignantId">Tuteur enseignant <span class="required">*</span></label>
+                    <select id="tuteurEnseignantId" name="tuteurEnseignantId" required>
+                        <option value="">-- Sélectionner un tuteur enseignant --</option>
+                        <option th:each="tuteur : ${tuteurs}"
+                                th:value="${tuteur.id}"
+                                th:text="${tuteur.prenom + ' ' + tuteur.nom}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="section">
+                <h3>Mission et objectifs</h3>
+                <div class="form-group">
+                    <label for="missionMotsCles">Mots-clés de la mission</label>
+                    <textarea id="missionMotsCles" name="missionMotsCles" rows="3" placeholder="Ex: Développement web, Java, Spring Boot"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="missionMetierCible">Métier cible</label>
+                    <input type="text" id="missionMetierCible" name="missionMetierCible" placeholder="Ex: Développeur Full Stack">
+                </div>
+
+                <div class="form-group">
+                    <label for="missionCommentaires">Commentaires sur la mission</label>
+                    <textarea id="missionCommentaires" name="missionCommentaires" rows="4" placeholder="Description de la mission..."></textarea>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">Créer l'apprenti</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+

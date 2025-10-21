@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des maîtres d'apprentissage - ASTA</title>
+    <link rel="stylesheet" th:href="@{/css/create-entreprise.css}">
+</head>
+<body>
+    <div class="header">
+        <h1>ASTA Dashboard</h1>
+        <div class="user-info">
+            <a th:href="@{/dashboard}" class="back-btn">← Retour au tableau de bord</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <div class="header-content">
+                <h2>Liste des maîtres d'apprentissage</h2>
+                <a th:href="@{/maitres/create}" class="btn-add">+ Ajouter un maître d'apprentissage</a>
+            </div>
+        </div>
+
+        <div th:if="${success}" class="alert-success" style="background-color: #e8f5e9; color: #2e7d32; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #66bb6a;">
+            <span th:text="${success}"></span>
+        </div>
+
+        <div th:if="${maitres.isEmpty()}" class="alert-empty">
+            Aucun maître d'apprentissage enregistré. Ajoutez-en un pour commencer.
+        </div>
+
+        <div th:if="${!maitres.isEmpty()}" class="table-container">
+            <table class="apprentis-table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Entreprise</th>
+                        <th>Email</th>
+                        <th>Téléphone</th>
+                        <th>Poste</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="maitre : ${maitres}">
+                        <td th:text="${maitre.nom}">Beauregard</td>
+                        <td th:text="${maitre.prenom}">Terence</td>
+                        <td th:text="${maitre.entreprise.raisonSociale}">Entreprise X</td>
+                        <td th:text="${maitre.email ?: 'Non renseigné'}">terence.beaureagard@example.com</td>
+                        <td th:text="${maitre.telephone ?: 'Non renseigné'}">0612345678</td>
+                        <td th:text="${maitre.poste ?: 'Non renseigné'}">Manager</td>
+                        <td>
+                            <form th:action="@{/maitres/{id}/delete(id=${maitre.id})}" method="post" style="display: inline;">
+                                <button type="submit" class="btn-delete" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce maître d\'apprentissage ?');">
+                                    Supprimer
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+

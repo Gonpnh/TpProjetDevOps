@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails Apprenti - ASTA</title>
+    <link rel="stylesheet" th:href="@{/css/apprenti-details.css}">
+</head>
+<body>
+    <div class="header">
+        <h1>ASTA Dashboard</h1>
+        <div class="user-info">
+            <a th:href="@{/dashboard}" class="back-btn">← Retour au tableau de bord</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Détails de l'apprenti</h2>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success">
+            <span th:text="${success}"></span>
+        </div>
+
+        <div th:if="${error}" class="alert alert-error">
+            <span th:text="${error}"></span>
+        </div>
+
+        <div class="details-card">
+            <div class="section">
+                <h3>Informations personnelles</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Nom :</label>
+                        <span th:text="${apprenti.nom}">Doe</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Prénom :</label>
+                        <span th:text="${apprenti.prenom}">John</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Email :</label>
+                        <span th:text="${apprenti.email}">john.doe@example.com</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Téléphone :</label>
+                        <span th:text="${apprenti.telephone ?: 'Non renseigné'}">0612345678</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Informations académiques</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Année académique :</label>
+                        <span th:text="${apprenti.anneeAcademique}">2024-2025</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Niveau :</label>
+                        <span th:text="${apprenti.niveau}">I1</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Programme :</label>
+                        <span th:text="${apprenti.programme ?: 'Non renseigné'}">Ingénieur</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Majeure :</label>
+                        <span th:text="${apprenti.majeure ?: 'Non renseignée'}">Informatique</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Mission et objectifs</h3>
+                <div class="info-item-full">
+                    <label>Mots-clés de la mission :</label>
+                    <p th:text="${apprenti.missionMotsCles ?: 'Non renseigné'}">Développement web, Java, Spring</p>
+                </div>
+                <div class="info-item-full">
+                    <label>Métier cible :</label>
+                    <p th:text="${apprenti.missionMetierCible ?: 'Non renseigné'}">Développeur Full Stack</p>
+                </div>
+                <div class="info-item-full">
+                    <label>Commentaires sur la mission :</label>
+                    <p th:text="${apprenti.missionCommentaires ?: 'Aucun commentaire'}">Description de la mission...</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Informations système</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Date de création :</label>
+                        <span th:text="${#temporals.format(apprenti.dateCreation, 'dd/MM/yyyy HH:mm')}">01/01/2024</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Dernière modification :</label>
+                        <span th:text="${#temporals.format(apprenti.dateModification, 'dd/MM/yyyy HH:mm')}">01/01/2024</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Statut :</label>
+                        <span th:text="${apprenti.archive ? 'Archivé' : 'Actif'}"
+                              th:class="${apprenti.archive ? 'status-archived' : 'status-active'}">Actif</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <a th:href="@{/dashboard}" class="btn-back">Retour à la liste</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

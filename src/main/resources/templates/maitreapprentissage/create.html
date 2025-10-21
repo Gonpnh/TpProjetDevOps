@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer un maître d'apprentissage - ASTA</title>
+    <link rel="stylesheet" th:href="@{/css/create-apprentice.css}">
+</head>
+<body>
+    <div class="header">
+        <h1>ASTA Dashboard</h1>
+        <div class="user-info">
+            <a th:href="@{/dashboard}" class="back-btn">← Retour au tableau de bord</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Créer un maître d'apprentissage</h2>
+        </div>
+
+        <div th:if="${error}" class="alert alert-error">
+            <span th:text="${error}"></span>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success">
+            <span th:text="${success}"></span>
+        </div>
+
+        <form class="form-card" method="post" th:action="@{/maitres/create}">
+            <div class="section">
+                <h3>Informations personnelles</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nom">Nom <span class="required">*</span></label>
+                        <input type="text" id="nom" name="nom" required autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label for="prenom">Prénom <span class="required">*</span></label>
+                        <input type="text" id="prenom" name="prenom" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="telephone">Téléphone</label>
+                        <input type="tel" id="telephone" name="telephone" placeholder="0612345678">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="poste">Poste</label>
+                    <input type="text" id="poste" name="poste" placeholder="Ex: Responsable RH">
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Entreprise</h3>
+                <div class="form-group">
+                    <label for="entrepriseId">Entreprise <span class="required">*</span></label>
+                    <select id="entrepriseId" name="entrepriseId" required>
+                        <option value="">-- Sélectionner une entreprise --</option>
+                        <option th:each="entreprise : ${entreprises}"
+                                th:value="${entreprise.id}"
+                                th:text="${entreprise.raisonSociale}">
+                        </option>
+                    </select>
+                    <p class="help-text">Si l'entreprise n'existe pas, <a th:href="@{/entreprises/create}">créez-la d'abord</a></p>
+                </div>
+
+                <div class="form-group">
+                    <label for="remarques">Remarques</label>
+                    <textarea id="remarques" name="remarques" rows="3" placeholder="Remarques ou notes supplémentaires"></textarea>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a th:href="@{/maitres}" class="btn-cancel">Annuler</a>
+                <button type="submit" class="btn-submit">Créer le maître d'apprentissage</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+
