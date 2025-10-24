@@ -8,6 +8,9 @@ import ytg.projetjavaytg.Services.ApprentiService;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Apprenti")
 @RestController
 @RequestMapping("/api/apprentis")
 public class ApprentiController {
