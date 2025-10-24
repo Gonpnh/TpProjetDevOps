@@ -88,7 +88,7 @@ public class ApprentiController {
         return apprentiService.getApprentiById(id)
                 .map(apprenti -> {
                     model.addAttribute("apprenti", apprenti);
-                    return "apprenti/details";
+                    return "apprentice/details";
                 })
                 .orElse("redirect:/dashboard");
     }
