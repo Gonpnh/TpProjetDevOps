@@ -31,6 +31,14 @@
                 <h3>Nouvel apprenti</h3>
                 <p>Ajouter un apprenti</p>
             </a>
+            <a th:href="@{/annee-academique}" class="action-card">
+                <h3>Nouvelle année</h3>
+                <p>Créer une nouvelle année académique</p>
+            </a>
+            <a th:href="@{/recherche}" class="action-card">
+                <h3>Recherche</h3>
+                <p>Rechercher tous les apprentis</p>
+            </a>
             <a th:href="@{/visites}" class="action-card">
                 <h3>Visites</h3>
                 <p>Voir le calendrier des visites</p>
@@ -70,6 +78,9 @@
                             <div class="action-buttons">
                                 <a th:href="@{/apprentis/{id}(id=${apprenti.id})}" class="btn-details">
                                     Voir détails
+                                </a>
+                                <a th:href="@{/apprentis/{id}/edit(id=${apprenti.id})}" class="btn-edit">
+                                    Modifier
                                 </a>
                                 <form th:action="@{/apprentis/{id}/delete(id=${apprenti.id})}" method="post" style="display: inline;">
                                     <button type="submit" class="btn-delete" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet apprenti ?');">

@@ -5,10 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ytg.projetjavaytg.Models.Apprenti;
-import ytg.projetjavaytg.Services.ApprentiService;
-import ytg.projetjavaytg.Services.EntrepriseService;
-import ytg.projetjavaytg.Services.MaitreApprentissageService;
-import ytg.projetjavaytg.Services.UtilisateurService;
+import ytg.projetjavaytg.Services.*;
 
 @Controller
 @RequestMapping("/apprentis")
@@ -18,19 +15,24 @@ public class ApprentiViewController {
     private final EntrepriseService entrepriseService;
     private final MaitreApprentissageService maitreApprentissageService;
     private final UtilisateurService utilisateurService;
+    private final AnneeAcademiqueService anneeAcademiqueService;
 
     public ApprentiViewController(ApprentiService apprentiService,
                                   EntrepriseService entrepriseService,
                                   MaitreApprentissageService maitreApprentissageService,
-                                  UtilisateurService utilisateurService) {
+                                  UtilisateurService utilisateurService,
+                                  AnneeAcademiqueService anneeAcademiqueService) {
         this.apprentiService = apprentiService;
         this.entrepriseService = entrepriseService;
         this.maitreApprentissageService = maitreApprentissageService;
         this.utilisateurService = utilisateurService;
+        this.anneeAcademiqueService = anneeAcademiqueService;
     }
 
     @GetMapping("/create")
     public String createApprentiForm(Model model) {
+        String anneeAcademique = anneeAcademiqueService.getAnneeAcademiqueEnCours();
+        model.addAttribute("anneeAcademique", anneeAcademique);
         model.addAttribute("entreprises", entrepriseService.getAllEntreprises());
         model.addAttribute("maitres", maitreApprentissageService.getAllMaitresApprentissage());
         model.addAttribute("tuteurs", utilisateurService.getAllUtilisateurs());
@@ -66,6 +68,45 @@ public class ApprentiViewController {
                     return "apprentice/details";
                 })
                 .orElse("redirect:/dashboard");
+    }
+
+    @GetMapping("/{id}/edit")
+    public String editApprentiForm(@PathVariable Long id, Model model) {
+        return apprentiService.getApprentiById(id)
+                .map(apprenti -> {
+                    model.addAttribute("apprenti", apprenti);
+                    model.addAttribute("entreprises", entrepriseService.getAllEntreprises());
+                    model.addAttribute("maitres", maitreApprentissageService.getAllMaitresApprentissage());
+                    model.addAttribute("tuteurs", utilisateurService.getAllUtilisateurs());
+                    return "apprentice/edit";
+                })
+                .orElse("redirect:/dashboard");
+    }
+
+    @PostMapping("/{id}/edit")
+    public String editApprenti(@PathVariable Long id,
+                               @ModelAttribute Apprenti apprenti,
+                               @RequestParam Long entrepriseId,
+                               @RequestParam Long maitreApprentissageId,
+                               @RequestParam Long tuteurEnseignantId,
+                               RedirectAttributes redirectAttributes) {
+        try {
+            entrepriseService.getEntrepriseById(entrepriseId).ifPresent(apprenti::setEntreprise);
+            maitreApprentissageService.getMaitreApprentissageById(maitreApprentissageId)
+                    .ifPresent(apprenti::setMaitreApprentissage);
+            utilisateurService.getUtilisateurById(tuteurEnseignantId)
+                    .ifPresent(apprenti::setTuteurEnseignant);
+            Apprenti updated = apprentiService.updateApprenti(id, apprenti);
+            if (updated != null) {
+                redirectAttributes.addFlashAttribute("success", "L'apprenti a été modifié avec succès !");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Apprenti non trouvé");
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Erreur lors de la modification : " + e.getMessage());
+            return "redirect:/apprentis/" + id + "/edit";
+        }
+        return "redirect:/dashboard";
     }
 
     @PostMapping("/{id}/delete")

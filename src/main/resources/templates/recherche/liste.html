@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche - ASTA</title>
+    <link rel="stylesheet" th:href="@{/css/recherche.css}">
+</head>
+<body>
+    <div class="header">
+        <h1>ASTA - Recherche</h1>
+        <div class="user-info">
+            <span>Bonjour, <strong th:text="${username}">Utilisateur</strong></span>
+            <form th:action="@{/logout}" method="post" style="margin: 0;">
+                <button type="submit" class="logout-btn">Déconnexion</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <a th:href="@{/dashboard}" class="btn-back">← Retour au tableau de bord</a>
+
+        <div class="page-header">
+            <h2>Recherche d'apprentis</h2>
+            <p class="subtitle">Liste complète de tous les apprentis (actifs et archivés)</p>
+        </div>
+
+        <div class="stats-info">
+            <div class="stat-badge">
+                <span class="number" th:text="${totalApprentis}">0</span>
+                <span class="label">Apprentis au total</span>
+            </div>
+        </div>
+
+        <div th:if="${apprentis.isEmpty()}" class="alert-empty">
+            Aucun apprenti trouvé dans la base de données
+        </div>
+
+        <div th:if="${!apprentis.isEmpty()}" class="table-container">
+            <table class="apprentis-table">
+                <thead>
+                    <tr>
+                        <th>Statut</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Email</th>
+                        <th>Niveau</th>
+                        <th>Année académique</th>
+                        <th>Programme</th>
+                        <th>Entreprise</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="apprenti : ${apprentis}" th:classappend="${apprenti.archive} ? 'archived-row' : ''">
+                        <td>
+                            <span th:if="${!apprenti.archive}" class="badge badge-active">Actif</span>
+                            <span th:if="${apprenti.archive}" class="badge badge-archived">Archivé</span>
+                        </td>
+                        <td th:text="${apprenti.nom}">Doe</td>
+                        <td th:text="${apprenti.prenom}">John</td>
+                        <td th:text="${apprenti.email}">john.doe@example.com</td>
+                        <td>
+                            <span class="niveau-badge" th:classappend="${'niveau-' + apprenti.niveau}" th:text="${apprenti.niveau}">I1</span>
+                        </td>
+                        <td th:text="${apprenti.anneeAcademique}">2025-2026</td>
+                        <td th:text="${apprenti.programme}">Ingénieur</td>
+                        <td th:text="${apprenti.entreprise?.raisonSociale}">Entreprise X</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a th:href="@{/apprentis/{id}(id=${apprenti.id})}" class="btn-details">
+                                    Voir détails
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+
