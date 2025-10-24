@@ -46,6 +46,18 @@ public class Apprenti {
     @Column(name = "archive")
     private Boolean archive;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "entreprise_id", nullable = false)
+    private Entreprise entreprise;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "maitre_apprentissage_id", nullable = false)
+    private MaitreApprentissage maitreApprentissage;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tuteur_enseignant_id", nullable = false)
+    private Utilisateur tuteurEnseignant;
+
     @Lob
     @Column(name = "mission_mots_cles")
     private String missionMotsCles;

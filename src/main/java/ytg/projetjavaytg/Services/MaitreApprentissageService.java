@@ -29,4 +29,9 @@ public class MaitreApprentissageService {
     public MaitreApprentissage createMaitreApprentissage(MaitreApprentissage maitreApprentissage) {
         return maitreApprentissageRepository.save(maitreApprentissage);
     }
+
+    @Transactional
+    public void deleteMaitreApprentissage(Long id) {
+        maitreApprentissageRepository.deleteById(id);
+    }
 }

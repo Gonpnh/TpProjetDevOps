@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer une entreprise - ASTA</title>
+    <link rel="stylesheet" th:href="@{/css/create-entreprise.css}">
+</head>
+<body>
+    <div class="header">
+        <h1>ASTA Dashboard</h1>
+        <div class="user-info">
+            <a th:href="@{/dashboard}" class="back-btn">← Retour au tableau de bord</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Créer une entreprise</h2>
+        </div>
+
+        <div th:if="${error}" class="alert alert-error">
+            <span th:text="${error}"></span>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success">
+            <span th:text="${success}"></span>
+        </div>
+
+        <form class="form-card" method="post" th:action="@{/entreprises/create}">
+            <div class="section">
+                <h3>Informations de l'entreprise</h3>
+
+                <div class="form-group">
+                    <label for="raisonSociale">Raison sociale <span class="required">*</span></label>
+                    <input type="text" id="raisonSociale" name="raisonSociale" required autofocus placeholder="Ex: Google France">
+                </div>
+
+                <div class="form-group">
+                    <label for="adresse">Adresse</label>
+                    <textarea id="adresse" name="adresse" rows="3" placeholder="Adresse complète de l'entreprise"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="informationsAcces">Informations d'accès</label>
+                    <textarea id="informationsAcces" name="informationsAcces" rows="3" placeholder="Badge, pièce d'identité, étage, code d'accès, etc."></textarea>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a th:href="@{/entreprises}" class="btn-cancel">Annuler</a>
+                <button type="submit" class="btn-submit">Créer l'entreprise</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+

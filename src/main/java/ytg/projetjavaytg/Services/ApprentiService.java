@@ -40,4 +40,9 @@ public class ApprentiService {
         }
         return apprentiRepository.save(apprenti);
     }
+
+    @Transactional
+    public void deleteApprenti(Long id) {
+        apprentiRepository.deleteById(id);
+    }
 }
