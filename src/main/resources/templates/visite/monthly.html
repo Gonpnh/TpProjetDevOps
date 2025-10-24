@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Visites - Calendrier</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+    <style>
+        /* Minimal overrides to blend with project styles */
+        #calendar { max-width: 1000px; margin: 20px auto; background: #fff; padding: 12px; border-radius:6px; box-shadow:0 2px 6px rgba(0,0,0,0.08);}
+        .fc .fc-daygrid-event { background-color: #2196F3; border: none; color: white; }
+        /* ensure header stays below modal */
+        .header { position: relative; z-index: 1000; }
+        .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.45); display:flex; align-items:center; justify-content:center; z-index:2147483000; }
+        .modal-card { background:white; padding:18px; border-radius:8px; width:520px; max-width:95%; box-shadow:0 12px 36px rgba(0,0,0,0.35); z-index:2147483001; }
+        .form-row { display:flex; gap:10px; }
+        .form-group { flex:1; display:flex; flex-direction:column; }
+
+        /* Boutons modal: harmonisation avec dashboard.css */
+        .btn-add {
+            background-color: #4CAF50; /* green like dashboard */
+            color: white;
+            padding: 8px 14px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 2px 0 rgba(0,0,0,0.08);
+        }
+        .btn-add:hover { opacity: 0.95; }
+
+        .btn-delete {
+            background-color: #f44336;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 2px 0 rgba(0,0,0,0.08);
+        }
+        .btn-delete:hover { opacity: 0.95; }
+
+        /* FullCalendar buttons styling to match the app theme */
+        .fc .fc-button {
+            background: #2196F3; /* match dashboard header */
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            box-shadow: 0 2px 0 rgba(0,0,0,0.08);
+            cursor: pointer;
+        }
+        .fc .fc-button:hover { opacity: 0.95; }
+        .fc .fc-toolbar-title { font-weight:700; text-transform:capitalize; }
+        .fc .fc-button:focus { outline: none; box-shadow:none; }
+        .fc .fc-button-primary { background:#1976D2; }
+
+        /* Ensure modal inputs are clear and legible */
+        #visiteForm input, #visiteForm select { padding:8px; border:1px solid #ddd; border-radius:4px; }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>ASTA Dashboard</h1>
+    <div class="user-info">
+        <a th:href="@{/dashboard}" class="back-btn">← Retour au tableau de bord</a>
+    </div>
+</div>
+
+<div class="container">
+    <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+
+    <div class="page-header" style="display:flex; align-items:center; gap:12px;">
+        <h1>Calendrier des visites</h1>
+        <!-- Nouveau bouton global pour ajouter une visite -->
+        <button id="openAddVisit" class="btn-add" style="margin-left:12px;">Ajouter une visite</button>
+    </div>
+
+    <div id="calendar"></div>
+</div>
+
+<!-- Formulaire modal (hidden) : moved outside .container to avoid stacking issues -->
+<div id="modal" style="display:none;">
+    <div class="modal-overlay">
+        <div class="modal-card">
+            <h3 id="modalTitle">Créer une visite</h3>
+            <form id="visiteForm">
+                <input type="hidden" name="_csrf" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <div class="form-row" style="margin-bottom:8px;">
+                    <div class="form-group">
+                        <label for="apprentiId">Apprenti</label>
+                        <select id="apprentiId" name="apprentiId" required>
+                            <option value="">-- Sélectionner --</option>
+                            <option th:each="a : ${apprentis}" th:value="${a.id}" th:text="${a.nom + ' ' + a.prenom}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dateVisite">Date</label>
+                        <input id="dateVisite" name="dateVisite" type="date" required />
+                    </div>
+                </div>
+                <div class="form-row" style="margin-bottom:8px;">
+                    <div class="form-group">
+                        <label for="format">Format</label>
+                        <select id="format" name="format">
+                            <option value="">-- Sélectionner --</option>
+                            <option value="présentiel">Présentiel</option>
+                            <option value="hybride">Hybride</option>
+                            <option value="distance">À distance</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="commentaires">Commentaires</label>
+                        <input id="commentaires" name="commentaires" />
+                    </div>
+                </div>
+                <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:8px;">
+                    <button type="submit" class="btn-add">Enregistrer</button>
+                    <button type="button" id="modalCancel" class="btn-delete">Annuler</button>
+                </div>
+                <div id="formMessage" style="margin-top:8px; color:green; display:none;"></div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- FullCalendar + dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script>
+    (function(){
+        const calendarEl = document.getElementById('calendar');
+        const modal = document.getElementById('modal');
+        const form = document.getElementById('visiteForm');
+        const cancelBtn = document.getElementById('modalCancel');
+        const formMessage = document.getElementById('formMessage');
+        const openAddVisit = document.getElementById('openAddVisit');
+
+        // helper to get CSRF token rendered by Thymeleaf
+        function getCsrf() {
+            const tokenInput = form.querySelector('input[name="_csrf"]');
+            if (tokenInput) return { name: tokenInput.getAttribute('name'), value: tokenInput.value };
+            return null;
+        }
+
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'fr',
+            firstDay: 1, // Lundi comme premier jour
+            // Forcer les noms courts des jours en français pour l'en-tête
+            dayHeaderContent: function(arg) {
+                const names = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+                // getUTCDay returns 0 (Dim) .. 6 (Sam)
+                return names[arg.date.getUTCDay()];
+            },
+            headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,dayGridWeek' },
+            // Forcer les labels en français (au cas où le pack de locale n'est pas chargé)
+            buttonText: { today: "Aujourd'hui", month: 'Mois', week: 'Semaine', day: 'Jour' },
+            events: function(fetchInfo, successCallback, failureCallback) {
+                fetch('/api/visites')
+                    .then(r => r.json())
+                    .then(data => {
+                        const events = data.map(v => ({
+                            id: v.id,
+                            title: (v.apprenti ? (v.apprenti.prenom ? (v.apprenti.prenom + ' ' + v.apprenti.nom) : v.apprenti.nom) : 'Visite') + (v.format ? ' ('+v.format+')' : ''),
+                            start: v.dateVisite,
+                            allDay: true
+                        }));
+                        successCallback(events);
+                    }).catch(e => { console.error(e); failureCallback(e); });
+            },
+            // Ne pas ouvrir le modal au clic sur un jour (évite le bug d'affichage)
+            dateClick: function(info) {
+                // Optionnel : sélectionner simplement la date dans le calendrier ou afficher info
+                // Ici, on ne fait rien pour éviter le comportement indésirable.
+            },
+            eventClick: function(info) {
+                // simple alert with details
+                alert(info.event.title + '\nDate: ' + info.event.startStr);
+            }
+        });
+
+        calendar.render();
+
+        // ouvrir le modal via le bouton global
+        openAddVisit && openAddVisit.addEventListener('click', function(){
+            form.reset();
+            // préremplir la date avec la date actuelle sélectionnée dans le calendrier si besoin
+            const view = calendar.view;
+            const today = new Date();
+            const iso = today.toISOString().slice(0,10);
+            document.getElementById('dateVisite').value = iso;
+            modal.style.display = 'block';
+            formMessage.style.display = 'none';
+        });
+
+        cancelBtn.addEventListener('click', ()=> modal.style.display = 'none');
+
+        form.addEventListener('submit', function(e){
+            e.preventDefault();
+            const data = {
+                apprentiId: Number(document.getElementById('apprentiId').value),
+                dateVisite: document.getElementById('dateVisite').value,
+                format: document.getElementById('format').value,
+                commentaires: document.getElementById('commentaires').value
+            };
+            const csrf = getCsrf();
+            const headers = { 'Content-Type': 'application/json' };
+            if (csrf) headers['X-CSRF-TOKEN'] = csrf.value;
+
+            fetch('/api/visites/simple', { method: 'POST', headers, body: JSON.stringify(data) })
+                .then(resp => {
+                    if (!resp.ok) return resp.text().then(t => Promise.reject(t));
+                    return resp.json();
+                })
+                .then(created => {
+                    formMessage.style.display = 'block';
+                    formMessage.style.color = 'green';
+                    formMessage.textContent = 'Visite créée.';
+                    calendar.refetchEvents();
+                    setTimeout(()=>{ modal.style.display = 'none'; }, 700);
+                }).catch(err => {
+                    formMessage.style.display = 'block';
+                    formMessage.style.color = 'red';
+                    formMessage.textContent = 'Erreur: ' + err;
+                });
+        });
+
+    })();
+</script>
+</body>
+</html>

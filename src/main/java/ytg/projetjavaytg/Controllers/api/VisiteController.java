@@ -5,7 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ytg.projetjavaytg.Models.Visite;
 import ytg.projetjavaytg.Services.VisiteService;
+import ytg.projetjavaytg.Services.ApprentiService;
+import ytg.projetjavaytg.Models.Apprenti;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,9 +19,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class VisiteController {
 
     private final VisiteService visiteService;
+    private final ApprentiService apprentiService;
 
-    public VisiteController(VisiteService visiteService) {
+    public VisiteController(VisiteService visiteService, ApprentiService apprentiService) {
         this.visiteService = visiteService;
+        this.apprentiService = apprentiService;
     }
 
     @GetMapping
@@ -38,6 +43,62 @@ public class VisiteController {
     public ResponseEntity<Visite> createVisite(@RequestBody Visite visite) {
         Visite createdVisite = visiteService.createVisite(visite);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdVisite);
+    }
+
+    // DTO pour création simple depuis le front
+    public static class CreateVisiteDTO {
+        public Long apprentiId;
+        public String dateVisite; // yyyy-MM-dd
+        public String format;
+        public String commentaires;
+    }
+
+    @PostMapping("/simple")
+    public ResponseEntity<?> createVisiteSimple(@RequestBody CreateVisiteDTO dto) {
+        if (dto == null || dto.apprentiId == null || dto.dateVisite == null) {
+            return ResponseEntity.badRequest().body("apprentiId and dateVisite required");
+        }
+
+        // parse date first (must be yyyy-MM-dd)
+        final LocalDate parsedDate;
+        try {
+            parsedDate = LocalDate.parse(dto.dateVisite);
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body("dateVisite must be in format yyyy-MM-dd");
+        }
+
+        // Validate and normalize format (final so can be used in lambda)
+        final String savedFormat;
+        if (dto.format == null || dto.format.trim().isEmpty()) {
+            savedFormat = null;
+        } else {
+            String f = dto.format.trim().toLowerCase();
+            if (f.equals("présentiel") || f.equals("presentiel") || f.equals("presentiel")) {
+                savedFormat = "présentiel";
+            } else if (f.equals("hybride")) {
+                savedFormat = "hybride";
+            } else if (f.equals("distance") || f.equals("à distance") || f.equals("a distance") || f.equals("adistance")) {
+                savedFormat = "distance";
+            } else {
+                return ResponseEntity.badRequest().body("format must be one of: présentiel, hybride, distance");
+            }
+        }
+
+        return apprentiService.getApprentiById(dto.apprentiId)
+                .map(apprenti -> {
+                    try {
+                        Visite v = new Visite();
+                        v.setApprenti(apprenti);
+                        v.setDateVisite(parsedDate);
+                        v.setFormat(savedFormat);
+                        v.setCommentaires(dto.commentaires);
+                        Visite created = visiteService.createVisite(v);
+                        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+                    } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+                    }
+                })
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Apprenti not found"));
     }
 
 }
