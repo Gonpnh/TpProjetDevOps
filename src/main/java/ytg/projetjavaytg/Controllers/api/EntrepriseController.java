@@ -1,5 +1,6 @@
 package ytg.projetjavaytg.Controllers.api;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -11,7 +12,9 @@ import ytg.projetjavaytg.Services.EntrepriseService;
 
 import java.util.List;
 
-@Controller
+@Tag(name = "Entreprise")
+@RestController
+@RequestMapping("/api/entreprises")
 public class EntrepriseController {
 
     private final EntrepriseService entrepriseService;

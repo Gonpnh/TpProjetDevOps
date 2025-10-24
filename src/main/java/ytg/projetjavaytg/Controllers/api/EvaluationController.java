@@ -1,5 +1,6 @@
 package ytg.projetjavaytg.Controllers.api;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +9,7 @@ import ytg.projetjavaytg.Services.EvaluationService;
 
 import java.util.List;
 
+@Tag(name = "Evaluation")
 @RestController
 @RequestMapping("/api/evaluations")
 public class EvaluationController {

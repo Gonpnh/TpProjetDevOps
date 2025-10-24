@@ -14,7 +14,11 @@ import ytg.projetjavaytg.Services.UtilisateurService;
 
 import java.util.List;
 
-@Controller
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Apprenti")
+@RestController
+@RequestMapping("/api/apprentis")
 public class ApprentiController {
 
     private final ApprentiService apprentiService;

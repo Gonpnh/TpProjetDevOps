@@ -8,6 +8,9 @@ import ytg.projetjavaytg.Services.VisiteService;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Visite")
 @RestController
 @RequestMapping("/api/visites")
 public class VisiteController {
@@ -36,4 +39,5 @@ public class VisiteController {
         Visite createdVisite = visiteService.createVisite(visite);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdVisite);
     }
+
 }
