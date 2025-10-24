@@ -1,5 +1,6 @@
 package ytg.projetjavaytg.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Table(name = "visite")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Visite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +25,7 @@ public class Visite {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "apprenti_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Apprenti apprenti;
 
     @Column(name = "date_visite")

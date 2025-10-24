@@ -3,10 +3,10 @@ package ytg.projetjavaytg.Controllers.api;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ytg.projetjavaytg.DTO.CreateVisiteDTO;
 import ytg.projetjavaytg.Models.Visite;
 import ytg.projetjavaytg.Services.VisiteService;
 import ytg.projetjavaytg.Services.ApprentiService;
-import ytg.projetjavaytg.Models.Apprenti;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -45,35 +45,27 @@ public class VisiteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdVisite);
     }
 
-    // DTO pour création simple depuis le front
-    public static class CreateVisiteDTO {
-        public Long apprentiId;
-        public String dateVisite; // yyyy-MM-dd
-        public String format;
-        public String commentaires;
-    }
-
     @PostMapping("/simple")
     public ResponseEntity<?> createVisiteSimple(@RequestBody CreateVisiteDTO dto) {
-        if (dto == null || dto.apprentiId == null || dto.dateVisite == null) {
+        if (dto == null || dto.getApprentiId() == null || dto.getDateVisite() == null) {
             return ResponseEntity.badRequest().body("apprentiId and dateVisite required");
         }
 
         // parse date first (must be yyyy-MM-dd)
         final LocalDate parsedDate;
         try {
-            parsedDate = LocalDate.parse(dto.dateVisite);
+            parsedDate = LocalDate.parse(dto.getDateVisite());
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body("dateVisite must be in format yyyy-MM-dd");
         }
 
         // Validate and normalize format (final so can be used in lambda)
         final String savedFormat;
-        if (dto.format == null || dto.format.trim().isEmpty()) {
+        if (dto.getFormat() == null || dto.getFormat().trim().isEmpty()) {
             savedFormat = null;
         } else {
-            String f = dto.format.trim().toLowerCase();
-            if (f.equals("présentiel") || f.equals("presentiel") || f.equals("presentiel")) {
+            String f = dto.getFormat().trim().toLowerCase();
+            if (f.equals("présentiel") || f.equals("presentiel")) {
                 savedFormat = "présentiel";
             } else if (f.equals("hybride")) {
                 savedFormat = "hybride";
@@ -84,14 +76,14 @@ public class VisiteController {
             }
         }
 
-        return apprentiService.getApprentiById(dto.apprentiId)
+        return apprentiService.getApprentiById(dto.getApprentiId())
                 .map(apprenti -> {
                     try {
                         Visite v = new Visite();
                         v.setApprenti(apprenti);
                         v.setDateVisite(parsedDate);
                         v.setFormat(savedFormat);
-                        v.setCommentaires(dto.commentaires);
+                        v.setCommentaires(dto.getCommentaires());
                         Visite created = visiteService.createVisite(v);
                         return ResponseEntity.status(HttpStatus.CREATED).body(created);
                     } catch (Exception e) {

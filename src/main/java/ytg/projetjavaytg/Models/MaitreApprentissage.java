@@ -1,5 +1,6 @@
 package ytg.projetjavaytg.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Setter
 @Entity
 @Table(name = "maitre_apprentissage")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class MaitreApprentissage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
