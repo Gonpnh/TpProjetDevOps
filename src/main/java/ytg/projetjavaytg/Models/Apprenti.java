@@ -1,5 +1,6 @@
 package ytg.projetjavaytg.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.time.Instant;
 @Setter
 @Entity
 @Table(name = "apprenti")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Apprenti {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,14 +50,17 @@ public class Apprenti {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "entreprise_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Entreprise entreprise;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "maitre_apprentissage_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private MaitreApprentissage maitreApprentissage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tuteur_enseignant_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Utilisateur tuteurEnseignant;
 
     @Lob

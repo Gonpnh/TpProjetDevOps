@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:fragment="flash">
+    <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-error">
+        <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+    </div>
+
+    <div th:if="${error}" class="alert alert-error">
+        <span th:text="${error}"></span>
+    </div>
+    <div th:if="${success}" class="alert alert-success">
+        <span th:text="${success}"></span>
+    </div>
+
+    <!-- Flash attributes from RedirectAttributes -->
+    <div th:if="${not #lists.isEmpty(#httpServletRequest.getSession(false)?.getAttribute('SPRING_FLASH_MAP'))}">
+        <div th:each="entry : ${#httpServletRequest.getSession(false).getAttribute('SPRING_FLASH_MAP')}">
+            <div th:if="${entry.key == 'error'}" class="alert alert-error" th:text="${entry.value}"></div>
+            <div th:if="${entry.key == 'success'}" class="alert alert-success" th:text="${entry.value}"></div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

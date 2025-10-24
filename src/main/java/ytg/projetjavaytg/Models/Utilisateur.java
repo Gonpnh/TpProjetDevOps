@@ -1,5 +1,6 @@
 package ytg.projetjavaytg.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.time.Instant;
 @Setter
 @Entity
 @Table(name = "utilisateur")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Utilisateur {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

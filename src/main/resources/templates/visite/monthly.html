@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Visites - Calendrier</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/calendar.css}">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="header">
+    <h1>ASTA Dashboard</h1>
+    <div class="user-info">
+        <a th:href="@{/dashboard}" class="back-btn">← Retour au tableau de bord</a>
+    </div>
+</div>
+
+<div class="container">
+    <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+
+    <div class="page-header" style="display:flex; align-items:center; gap:12px;">
+        <h1>Calendrier des visites</h1>
+        <button id="openAddVisit" class="btn-add" style="margin-left:12px;">Ajouter une visite</button>
+    </div>
+
+    <div id="calendar"></div>
+</div>
+
+<!-- Formulaire modal (hidden) -->
+<div id="modal" style="display:none;">
+    <div class="modal-overlay">
+        <div class="modal-card">
+            <h3 id="modalTitle">Créer une visite</h3>
+            <form id="visiteForm">
+                <input type="hidden" name="_csrf" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <div class="form-row" style="margin-bottom:8px;">
+                    <div class="form-group">
+                        <label for="apprentiId">Apprenti</label>
+                        <select id="apprentiId" name="apprentiId" required>
+                            <option value="">-- Sélectionner --</option>
+                            <option th:each="a : ${apprentis}" th:value="${a.id}" th:text="${a.nom + ' ' + a.prenom}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dateVisite">Date</label>
+                        <input id="dateVisite" name="dateVisite" type="date" required />
+                    </div>
+                </div>
+                <div class="form-row" style="margin-bottom:8px;">
+                    <div class="form-group">
+                        <label for="format">Format</label>
+                        <select id="format" name="format">
+                            <option value="">-- Sélectionner --</option>
+                            <option value="présentiel">Présentiel</option>
+                            <option value="hybride">Hybride</option>
+                            <option value="distance">À distance</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="commentaires">Commentaires</label>
+                        <input id="commentaires" name="commentaires" />
+                    </div>
+                </div>
+                <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:8px;">
+                    <button type="submit" class="btn-add">Enregistrer</button>
+                    <button type="button" id="modalCancel" class="btn-delete">Annuler</button>
+                </div>
+                <div id="formMessage" style="margin-top:8px; color:green; display:none;"></div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal détails de visite -->
+<div id="visiteDetailModal" class="visite-detail-modal" style="display:none;">
+    <div class="modal-overlay">
+        <div class="modal-card">
+            <div class="visite-detail-header">
+                <h3>Détails de la visite</h3>
+                <button type="button" id="closeDetailModal" class="btn-delete" style="padding:4px 10px; font-size:0.9em;">✕</button>
+            </div>
+            <div class="visite-detail-body" id="visiteDetailBody">
+                <!-- Contenu dynamique -->
+            </div>
+            <div style="display:flex; justify-content:flex-end; margin-top:16px; gap:8px;">
+                <button type="button" id="closeDetailModalBtn" class="btn-add">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FullCalendar + dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script th:src="@{/js/calendar.js}"></script>
+</body>
+</html>
+
