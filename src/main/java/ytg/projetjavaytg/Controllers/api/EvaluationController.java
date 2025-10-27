@@ -31,7 +31,7 @@ public class EvaluationController {
     public ResponseEntity<Evaluation> getEvaluationById(@PathVariable Long id) {
         return evaluationService.getEvaluationById(id)
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResourceNotFoundException("L'Evalution que vous voulez trouver n'existe pas"));
+                .orElseThrow(() -> new ResourceNotFoundException("L'Evaluation que vous voulez trouver n'existe pas"));
     }
 
     @PostMapping
