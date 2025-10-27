@@ -74,7 +74,7 @@ public class VisiteController {
             } else if (f.equals("distance") || f.equals("à distance") || f.equals("a distance") || f.equals("adistance")) {
                 savedFormat = "distance";
             } else {
-                throw new BadRequestException("Le format doit être : présentiel, hybride, distance");
+                return ResponseEntity.badRequest().body("Le format doit être : présentiel, hybride, distance");
             }
         }
 
