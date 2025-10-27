@@ -109,6 +109,26 @@
 
             <div class="actions">
                 <a th:href="@{/dashboard}" class="btn-back">Retour à la liste</a>
+
+                <!-- Si une évaluation existe déjà -->
+                <a th:if="${hasEvaluation}"
+                   th:href="@{/evaluation/view/{id}(id=${apprenti.id})}"
+                   class="btn-view">
+                    Voir l'évaluation
+                </a>
+
+                <a th:if="${hasEvaluation}"
+                   th:href="@{/evaluation/apprenti/{id}(id=${apprenti.id})}"
+                   class="btn-edit">
+                    Modifier l'évaluation
+                </a>
+
+                <!-- Si aucune évaluation n'existe -->
+                <a th:if="${!hasEvaluation}"
+                   th:href="@{/evaluation/apprenti/{id}(id=${apprenti.id})}"
+                   class="btn-create">
+                    Évaluer l'apprenti
+                </a>
             </div>
         </div>
     </div>

@@ -158,10 +158,13 @@ body {
     text-align: center;
     padding-top: 20px;
     border-top: 1px solid #e0e0e0;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
 }
 
 .btn-back {
-    background-color: #2196F3;
+    background-color: #757575;
     color: white;
     padding: 12px 30px;
     text-decoration: none;
@@ -171,7 +174,49 @@ body {
 }
 
 .btn-back:hover {
+    background-color: #616161;
+}
+
+.btn-view {
+    background-color: #2196F3;
+    color: white;
+    padding: 12px 30px;
+    text-decoration: none;
+    border-radius: 3px;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.btn-view:hover {
     background-color: #1976D2;
+}
+
+.btn-create {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 30px;
+    text-decoration: none;
+    border-radius: 3px;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.btn-create:hover {
+    background-color: #45a049;
+}
+
+.btn-edit {
+    background-color: #FF9800;
+    color: white;
+    padding: 12px 30px;
+    text-decoration: none;
+    border-radius: 3px;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.btn-edit:hover {
+    background-color: #F57C00;
 }
 
 /* Responsive */

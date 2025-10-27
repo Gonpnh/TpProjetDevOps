@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultation Évaluation - ASTA</title>
+    <link rel="stylesheet" th:href="@{/css/evaluation-form.css}">
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>ASTA Dashboard</h1>
+        <div class="user-info">
+            <a th:href="@{/dashboard}" class="back-btn">← Retour au tableau de bord</a>
+        </div>
+    </div>
+
+    <div class="evaluation-container">
+        <!-- En-tête avec informations apprenti -->
+        <div class="evaluation-header">
+            <h1>Évaluation de l'apprenti (Consultation)</h1>
+            <p><strong>Nom :</strong> <span th:text="${apprenti.nom}"></span> <span th:text="${apprenti.prenom}"></span></p>
+            <p><strong>Programme :</strong> <span th:text="${apprenti.programme}"></span> - <span th:text="${apprenti.majeure}"></span></p>
+            <p><strong>Année académique :</strong> <span th:text="${apprenti.anneeAcademique}"></span> (<span th:text="${apprenti.niveau}"></span>)</p>
+            <p><strong>Entreprise :</strong> <span th:text="${apprenti.entreprise?.raisonSociale ?: 'Non renseignée'}"></span></p>
+        </div>
+
+        <!-- Contenu en lecture seule -->
+        <div class="evaluation-form">
+
+            <!-- Section: Informations Mission -->
+            <div class="form-section">
+                <h2>Informations Mission</h2>
+                <div class="info-box">
+                    <p><strong>Mots-clés :</strong> <span th:text="${apprenti.missionMotsCles ?: 'Non renseignés'}"></span></p>
+                    <p><strong>Métier cible :</strong> <span th:text="${apprenti.missionMetierCible ?: 'Non renseigné'}"></span></p>
+                    <p><strong>Commentaires mission :</strong> <span th:text="${apprenti.missionCommentaires ?: 'Aucun'}"></span></p>
+                </div>
+            </div>
+
+            <!-- Section: Mémoire / Rapport -->
+            <div class="form-section">
+                <h2>Mémoire / Rapport</h2>
+
+                <div class="view-group">
+                    <label>Thème / Sujet :</label>
+                    <p class="view-content" th:text="${evaluation.memoireTheme ?: 'Non renseigné'}"></p>
+                </div>
+
+                <div class="view-group">
+                    <label>Note finale (sur 20) :</label>
+                    <p class="view-content" th:text="${evaluation.memoireNote != null ? evaluation.memoireNote + '/20' : 'Non noté'}"></p>
+                </div>
+
+                <div class="view-group">
+                    <label>Commentaires :</label>
+                    <p class="view-content" th:text="${evaluation.memoireCommentaires ?: 'Aucun commentaire'}"></p>
+                </div>
+            </div>
+
+            <!-- Section: Soutenance -->
+            <div class="form-section">
+                <h2>Soutenance</h2>
+
+                <div class="view-row">
+                    <div class="view-group">
+                        <label>Date de soutenance :</label>
+                        <p class="view-content" th:text="${evaluation.soutenanceDate != null ? #temporals.format(evaluation.soutenanceDate, 'dd/MM/yyyy') : 'Non programmée'}"></p>
+                    </div>
+
+                    <div class="view-group">
+                        <label>Note finale (sur 20) :</label>
+                        <p class="view-content" th:text="${evaluation.soutenanceNote != null ? evaluation.soutenanceNote + '/20' : 'Non noté'}"></p>
+                    </div>
+                </div>
+
+                <div class="view-group">
+                    <label>Commentaires :</label>
+                    <p class="view-content" th:text="${evaluation.soutenanceCommentaires ?: 'Aucun commentaire'}"></p>
+                </div>
+            </div>
+
+            <!-- Section: Remarques et Feedback -->
+            <div class="form-section">
+                <h2>Remarques et Feedback</h2>
+
+                <h3>Remarques générales (Évaluation)</h3>
+                <div class="view-group">
+                    <p class="view-content" th:text="${evaluation.remarquesGenerales ?: 'Aucune remarque'}"></p>
+                </div>
+
+                <h3>Feedback du Tuteur-Enseignant</h3>
+                <div class="info-box">
+                    <p><strong>Feedback :</strong></p>
+                    <p th:text="${apprenti.feedbackTuteur ?: 'Aucun feedback enregistré'}"></p>
+                </div>
+
+                <div class="info-box" th:if="${apprenti.remarquesGenerales}">
+                    <p><strong>Remarques générales sur l'apprenti :</strong></p>
+                    <p th:text="${apprenti.remarquesGenerales}"></p>
+                </div>
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="action-buttons">
+                <a th:href="@{/apprentis/{id}(id=${apprenti.id})}" class="btn btn-secondary">
+                    ← Retour aux détails
+                </a>
+
+                <a th:href="@{/evaluation/apprenti/{id}(id=${apprenti.id})}" class="btn btn-primary">
+                    Modifier l'évaluation
+                </a>
+
+                <a th:href="@{/evaluation/download/{id}(id=${apprenti.id})}"
+                   class="btn btn-pdf"
+                   target="_blank">
+                    Télécharger le bulletin PDF
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

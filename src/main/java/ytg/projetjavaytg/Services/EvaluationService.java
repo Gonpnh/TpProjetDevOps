@@ -26,10 +26,31 @@ public class EvaluationService {
         return evaluationRepository.findById(id);
     }
 
+    public Optional<Evaluation> getEvaluationByApprentiId(Long apprentiId) {
+        return evaluationRepository.findByApprentiId(apprentiId);
+    }
+
     @Transactional
     public Evaluation createEvaluation(Evaluation evaluation) {
         evaluation.setDateCreation(Instant.now());
         evaluation.setDateModification(Instant.now());
         return evaluationRepository.save(evaluation);
+    }
+
+    @Transactional
+    public Evaluation updateEvaluation(Long id, Evaluation evaluation) {
+        Evaluation existingEvaluation = evaluationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Évaluation non trouvée"));
+
+        existingEvaluation.setMemoireTheme(evaluation.getMemoireTheme());
+        existingEvaluation.setMemoireNote(evaluation.getMemoireNote());
+        existingEvaluation.setMemoireCommentaires(evaluation.getMemoireCommentaires());
+        existingEvaluation.setSoutenanceDate(evaluation.getSoutenanceDate());
+        existingEvaluation.setSoutenanceNote(evaluation.getSoutenanceNote());
+        existingEvaluation.setSoutenanceCommentaires(evaluation.getSoutenanceCommentaires());
+        existingEvaluation.setRemarquesGenerales(evaluation.getRemarquesGenerales());
+        existingEvaluation.setDateModification(Instant.now());
+
+        return evaluationRepository.save(existingEvaluation);
     }
 }
