@@ -1,4 +1,3 @@
-// java
 package ytg.projetjavaytg.exception;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -57,19 +56,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiError> handleDataIntegrity(DataIntegrityViolationException ex) {
-        ApiError apiError = buildApiError(HttpStatus.CONFLICT, "Database constraint violation");
+        ApiError apiError = buildApiError(HttpStatus.CONFLICT, "Contrainte d'intégrité non respecté");
         return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiError> handleAccessDenied(AccessDeniedException ex) {
-        ApiError apiError = buildApiError(HttpStatus.FORBIDDEN, "Access denied");
+        ApiError apiError = buildApiError(HttpStatus.FORBIDDEN, "Access refusé");
         return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleAll(Exception ex) {
-        ApiError apiError = buildApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error");
+        ApiError apiError = buildApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Erreur Serveur");
         return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
