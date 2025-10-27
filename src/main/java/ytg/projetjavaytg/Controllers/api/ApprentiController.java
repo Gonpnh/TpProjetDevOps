@@ -28,6 +28,12 @@ public class ApprentiController {
         return ResponseEntity.ok(apprentis);
     }
 
+    @GetMapping("/by-raison-sociale/{raisonSociale}")
+    public ResponseEntity<List<Apprenti>> getByRaisonSociale(@PathVariable String raisonSociale) {
+        List<Apprenti> apprentis = apprentiService.getAllByRaisonSociale(raisonSociale);
+        return ResponseEntity.ok(apprentis);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Apprenti> getApprentiById(@PathVariable Long id) {
         return apprentiService.getApprentiById(id)

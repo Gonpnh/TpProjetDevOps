@@ -56,4 +56,12 @@ public class ApprentiService {
                 .orElseThrow(() -> new ResourceNotFoundException("L'apprenti que vous voulez supprimer n'existe pas" ));
         apprentiRepository.deleteById(id);
     }
+
+    public List<Apprenti> getAllByRaisonSociale(String raisonSociale) {
+        List<Apprenti> apprentis = apprentiRepository.findAllByRaisonSocialeIgnoreCase(raisonSociale);
+        if (apprentis.isEmpty()){
+            throw new ResourceNotFoundException("Aucun apprenti trouvé dans l'entreprise " + raisonSociale);
+        }
+        return apprentis;
+    }
 }

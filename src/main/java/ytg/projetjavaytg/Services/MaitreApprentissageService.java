@@ -44,4 +44,12 @@ public class MaitreApprentissageService {
         maitreApprentissageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Le maitre d'apprentissage que vous voulez supprimer n'existe pas"));
         maitreApprentissageRepository.deleteById(id);
     }
+
+    public List<MaitreApprentissage> findAllMaitresApprentissage(String raisonSociale) {
+        List<MaitreApprentissage> maitres = maitreApprentissageRepository.findAllByEntrepriseRaisonSociale(raisonSociale);
+        if (maitres.isEmpty()){
+            throw new ResourceNotFoundException("Aucun maitre d'apprentissage trouvé pour la raison sociale " + raisonSociale);
+        }
+        return maitres;
+    }
 }

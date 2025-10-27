@@ -45,4 +45,10 @@ public class MaitreApprentissageController {
         maitreApprentissageService.deleteMaitreApprentissage(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("by-raison-sociale/{raisonSociale}")
+    public ResponseEntity<List<MaitreApprentissage>> getByRaisonSociale(@PathVariable String raisonSociale) {
+        List<MaitreApprentissage> maitres = maitreApprentissageService.findAllMaitresApprentissage(raisonSociale);
+        return ResponseEntity.ok(maitres);
+    }
 }
