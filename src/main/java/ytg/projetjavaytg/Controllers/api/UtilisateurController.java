@@ -31,7 +31,7 @@ public class UtilisateurController {
     public ResponseEntity<Utilisateur> getUtilisateurById(@PathVariable Long id) {
         return utilisateurService.getUtilisateurById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new RuntimeException("Aucun utilisateur avec l'id " + id + " n'existe"));
     }
 
     @PostMapping

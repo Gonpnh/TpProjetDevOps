@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ytg.projetjavaytg.Models.Utilisateur;
 import ytg.projetjavaytg.Repositories.UtilisateurRepository;
+import ytg.projetjavaytg.exception.ResourceNotFoundException;
 
 import java.time.Instant;
 import java.util.List;
@@ -18,13 +19,20 @@ public class UtilisateurService {
         this.utilisateurRepository = utilisateurRepository;
     }
 
-    // TODO il serait recommandé d'encoder le mot de passe avec BCrypt avant de le sauvegarder (en utilisant PasswordEncoder)
     public List<Utilisateur> getAllUtilisateurs() {
-        return utilisateurRepository.findAll();
+        List<Utilisateur> utilisateurs = utilisateurRepository.findAll();
+        if (utilisateurs.isEmpty()){
+            throw new ResourceNotFoundException("Aucun utilisateur en base");
+        }
+        return utilisateurs;
     }
 
     public Optional<Utilisateur> getUtilisateurById(Long id) {
-        return utilisateurRepository.findById(id);
+        Optional<Utilisateur> utilisateur = utilisateurRepository.findById(id);
+        if (utilisateur.isPresent()){
+            return utilisateur;
+        }
+        throw new ResourceNotFoundException("Aucun utilisateur trouvé avec l'id " + id);
     }
 
     @Transactional
