@@ -9,6 +9,7 @@ import ytg.projetjavaytg.Services.ApprentiService;
 import java.util.List;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import ytg.projetjavaytg.exception.ResourceNotFoundException;
 
 @Tag(name = "Apprenti")
 @RestController
@@ -31,7 +32,7 @@ public class ApprentiController {
     public ResponseEntity<Apprenti> getApprentiById(@PathVariable Long id) {
         return apprentiService.getApprentiById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Apprenti not found with id " + id));
     }
 
     @PostMapping
