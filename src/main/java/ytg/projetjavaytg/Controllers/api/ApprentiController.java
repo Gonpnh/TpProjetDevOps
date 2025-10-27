@@ -32,7 +32,7 @@ public class ApprentiController {
     public ResponseEntity<Apprenti> getApprentiById(@PathVariable Long id) {
         return apprentiService.getApprentiById(id)
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResourceNotFoundException("Apprenti not found with id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Apprenti non trouvé avec id " + id));
     }
 
     @PostMapping

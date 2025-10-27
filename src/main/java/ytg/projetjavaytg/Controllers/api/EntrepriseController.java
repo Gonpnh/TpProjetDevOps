@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ytg.projetjavaytg.Models.Entreprise;
 import ytg.projetjavaytg.Services.EntrepriseService;
+import ytg.projetjavaytg.exception.ResourceNotFoundException;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class EntrepriseController {
     public ResponseEntity<Entreprise> getEntrepriseById(@PathVariable Long id) {
         return entrepriseService.getEntrepriseById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Entreprise non trouvé avec id " + id))
     }
 
     @PostMapping
