@@ -31,7 +31,7 @@ public class EntrepriseController {
     public ResponseEntity<Entreprise> getEntrepriseById(@PathVariable Long id) {
         return entrepriseService.getEntrepriseById(id)
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResourceNotFoundException("Entreprise non trouvé avec id " + id))
+                .orElseThrow(() -> new ResourceNotFoundException("Entreprise non trouvé avec id " + id));
     }
 
     @PostMapping
