@@ -68,6 +68,11 @@
                     </div>
 
                     <div class="filter-group">
+                        <label for="mission_mots_cles">Mots-clés de mission</label>
+                        <input type="text" id="mission_mots_cles" name="mission_mots_cles" th:value="${filtreMotCle}" placeholder="Ex: Java, Spring, développement...">
+                    </div>
+
+                    <div class="filter-group">
                         <label for="statut">Statut</label>
                         <select id="statut" name="statut">
                             <option value="tous" th:selected="${filtreStatut == 'tous'}">Tous les statuts</option>

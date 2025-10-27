@@ -58,7 +58,14 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="anneeAcademique">Année académique <span class="required">*</span></label>
-                        <input type="text" id="anneeAcademique" name="anneeAcademique" th:value="*{anneeAcademique}" required>
+                        <select id="anneeAcademique" name="anneeAcademique" required>
+                            <option value="">-- Sélectionner une année académique --</option>
+                            <option th:each="annee : ${annees}"
+                                    th:value="${annee}"
+                                    th:text="${annee}"
+                                    th:selected="${annee == apprenti.anneeAcademique}">
+                            </option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="niveau">Niveau</label>
@@ -157,4 +164,3 @@
     </div>
 </body>
 </html>
-

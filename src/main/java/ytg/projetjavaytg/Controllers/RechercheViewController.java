@@ -38,7 +38,8 @@ public class RechercheViewController {
                                         @RequestParam(value = "niveau", required = false) String niveau,
                                         @RequestParam(value = "anneeAcademique", required = false) String anneeAcademique,
                                         @RequestParam(value = "entreprise", required = false) String entreprise,
-                                        @RequestParam(value = "statut", required = false) String statut) {
+                                        @RequestParam(value = "statut", required = false) String statut,
+                                        @RequestParam(value = "mission_mots_cles", required = false) String motCle) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
@@ -94,6 +95,14 @@ public class RechercheViewController {
                         }
                     }
 
+                    // Filtre par mots-clés de mission
+                    if (motCle != null && !motCle.trim().isEmpty()) {
+                        if (apprenti.getMissionMotsCles() == null ||
+                                !apprenti.getMissionMotsCles().toLowerCase().contains(motCle.toLowerCase().trim())) {
+                            return false;
+                        }
+                    }
+
                     return true;
                 })
                 .collect(Collectors.toList());
@@ -114,6 +123,7 @@ public class RechercheViewController {
         model.addAttribute("filtreAnneeAcademique", anneeAcademique != null ? anneeAcademique : "toutes");
         model.addAttribute("filtreEntreprise", entreprise != null ? entreprise : "");
         model.addAttribute("filtreStatut", statut != null ? statut : "tous");
+        model.addAttribute("filtreMotCle", motCle != null ? motCle : "");
 
         return "recherche/liste";
     }

@@ -80,6 +80,8 @@ public class ApprentiViewController {
                     model.addAttribute("entreprises", entrepriseService.getAllEntreprises());
                     model.addAttribute("maitres", maitreApprentissageService.getAllMaitresApprentissage());
                     model.addAttribute("tuteurs", utilisateurService.getAllUtilisateurs());
+                    // Fournit la liste complète des années académiques pour le select
+                    model.addAttribute("annees", anneeAcademiqueService.getAllAnnees());
                     return "apprentice/edit";
                 })
                 .orElse("redirect:/dashboard");
