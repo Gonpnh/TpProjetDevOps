@@ -64,7 +64,7 @@
 
         <!-- Formulaire de création automatique -->
         <div class="form-container primary-action">
-            <h3>🚀 Créer la nouvelle année automatiquement</h3>
+            <h3>Créer la nouvelle année automatiquement</h3>
             <p class="description">Cliquez sur le bouton ci-dessous pour passer automatiquement à l'année suivante</p>
 
             <div th:if="${anneeActuelle != null && anneeActuelle != ''}" class="next-year-info">
@@ -74,7 +74,7 @@
             </div>
 
             <div class="warning-box">
-                <strong>⚠️ Attention !</strong>
+                <strong>Attention !</strong>
                 <p>Cette action est irréversible et va :</p>
                 <ul>
                     <li>Archiver tous les apprentis de niveau I3</li>
@@ -86,7 +86,6 @@
 
             <form th:action="@{/annee-academique/creer-suivante}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir créer la nouvelle année académique ? Cette action est irréversible.');">
                 <button type="submit" class="btn-create-auto">
-                    <span class="icon">🎓</span>
                     <span class="text">Créer la nouvelle année académique</span>
                 </button>
             </form>

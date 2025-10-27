@@ -7,6 +7,9 @@ import ytg.projetjavaytg.Repositories.AnneeAcademiqueRepository;
 
 import java.time.Instant;
 import java.util.Optional;
+import java.util.List;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 @Service
 public class AnneeAcademiqueService {
@@ -58,6 +61,12 @@ public class AnneeAcademiqueService {
         int currentYear = java.time.Year.now().getValue();
         return currentYear + "-" + (currentYear + 1);
     }
+
+    // Retourne la liste de toutes les années académiques (format String) triées par ordre décroissant
+    public List<String> getAllAnnees() {
+        return anneeAcademiqueRepository.findAll().stream()
+                .map(AnneeAcademique::getAnnee)
+                .sorted(Comparator.reverseOrder())
+                .collect(Collectors.toList());
+    }
 }
-
-
