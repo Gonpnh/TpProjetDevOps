@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche - ASTA</title>
+    <link rel="stylesheet" th:href="@{/css/recherche.css}">
+</head>
+<body>
+    <div class="header">
+        <h1>ASTA - Recherche</h1>
+        <div class="user-info">
+            <span>Bonjour, <strong th:text="${username}">Utilisateur</strong></span>
+            <form th:action="@{/logout}" method="post" style="margin: 0;">
+                <button type="submit" class="logout-btn">Déconnexion</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <a th:href="@{/dashboard}" class="btn-back">← Retour au tableau de bord</a>
+
+        <div class="page-header">
+            <h2>Recherche d'apprentis</h2>
+            <p class="subtitle">Liste complète de tous les apprentis (actifs et archivés)</p>
+        </div>
+
+        <!-- Formulaire de filtres -->
+        <div class="filters-container">
+            <h3 class="filters-title">Filtres de recherche</h3>
+            <form method="get" class="filters-form">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label for="nom">Nom</label>
+                        <input type="text" id="nom" name="nom" th:value="${filtreNom}" placeholder="Rechercher par nom...">
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="prenom">Prénom</label>
+                        <input type="text" id="prenom" name="prenom" th:value="${filtrePrenom}" placeholder="Rechercher par prénom...">
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="niveau">Niveau</label>
+                        <select id="niveau" name="niveau">
+                            <option value="tous" th:selected="${filtreNiveau == 'tous'}">Tous les niveaux</option>
+                            <option value="I1" th:selected="${filtreNiveau == 'I1'}">I1</option>
+                            <option value="I2" th:selected="${filtreNiveau == 'I2'}">I2</option>
+                            <option value="I3" th:selected="${filtreNiveau == 'I3'}">I3</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="anneeAcademique">Année académique</label>
+                        <select id="anneeAcademique" name="anneeAcademique">
+                            <option value="toutes" th:selected="${filtreAnneeAcademique == 'toutes'}">Toutes les années</option>
+                            <option th:each="annee : ${annees}"
+                                    th:value="${annee}"
+                                    th:text="${annee}"
+                                    th:selected="${filtreAnneeAcademique == annee}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="entreprise">Entreprise</label>
+                        <input type="text" id="entreprise" name="entreprise" th:value="${filtreEntreprise}" placeholder="Rechercher par entreprise...">
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="mission_mots_cles">Mots-clés de mission</label>
+                        <input type="text" id="mission_mots_cles" name="mission_mots_cles" th:value="${filtreMotCle}" placeholder="Ex: Java, Spring, développement...">
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="statut">Statut</label>
+                        <select id="statut" name="statut">
+                            <option value="tous" th:selected="${filtreStatut == 'tous'}">Tous les statuts</option>
+                            <option value="actif" th:selected="${filtreStatut == 'actif'}">Actifs seulement</option>
+                            <option value="archive" th:selected="${filtreStatut == 'archive'}">Archivés seulement</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filters-actions">
+                    <button type="submit" class="btn-filter">Appliquer les filtres</button>
+                    <a th:href="@{/recherche}" class="btn-reset">Réinitialiser</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="stats-info">
+            <div class="stat-badge">
+                <span class="number" th:text="${totalApprentis}">0</span>
+                <span class="label">Apprentis trouvés</span>
+            </div>
+            <div class="stat-badge" th:if="${totalApprentis != totalApprentisGlobal}">
+                <span class="number" th:text="${totalApprentisGlobal}">0</span>
+                <span class="label">Total dans la base</span>
+            </div>
+        </div>
+
+        <div th:if="${apprentis.isEmpty()}" class="alert-empty">
+            Aucun apprenti trouvé dans la base de données
+        </div>
+
+        <div th:if="${!apprentis.isEmpty()}" class="table-container">
+            <table class="apprentis-table">
+                <thead>
+                    <tr>
+                        <th>Statut</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Email</th>
+                        <th>Niveau</th>
+                        <th>Année académique</th>
+                        <th>Programme</th>
+                        <th>Entreprise</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="apprenti : ${apprentis}" th:classappend="${apprenti.archive} ? 'archived-row' : ''">
+                        <td>
+                            <span th:if="${!apprenti.archive}" class="badge badge-active">Actif</span>
+                            <span th:if="${apprenti.archive}" class="badge badge-archived">Archivé</span>
+                        </td>
+                        <td th:text="${apprenti.nom}">Doe</td>
+                        <td th:text="${apprenti.prenom}">John</td>
+                        <td th:text="${apprenti.email}">john.doe@example.com</td>
+                        <td>
+                            <span class="niveau-badge" th:classappend="${'niveau-' + apprenti.niveau}" th:text="${apprenti.niveau}">I1</span>
+                        </td>
+                        <td th:text="${apprenti.anneeAcademique}">2025-2026</td>
+                        <td th:text="${apprenti.programme}">Ingénieur</td>
+                        <td th:text="${apprenti.entreprise?.raisonSociale}">Entreprise X</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a th:href="@{/apprentis/{id}(id=${apprenti.id})}" class="btn-details">
+                                    Voir détails
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
