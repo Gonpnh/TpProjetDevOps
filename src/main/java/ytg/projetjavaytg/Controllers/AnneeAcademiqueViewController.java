@@ -32,6 +32,10 @@ public class AnneeAcademiqueViewController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
             model.addAttribute("username", username);
+
+            String anneeActuelle = anneeAcademiqueService.getAnneeAcademiqueEnCours();
+            model.addAttribute("anneeActuelle", anneeActuelle);
+
             List<Apprenti> apprentisActifs = apprentiService.getApprentisNonArchives();
             Map<String, Long> statsParNiveau = apprentisActifs.stream()
                     .filter(a -> a.getNiveau() != null)
@@ -43,13 +47,6 @@ public class AnneeAcademiqueViewController {
             model.addAttribute("nbI2", nbI2);
             model.addAttribute("nbI3", nbI3);
             model.addAttribute("totalApprentis", apprentisActifs.size());
-            String anneeActuelle = apprentisActifs.isEmpty() ? "" :
-                    apprentisActifs.stream()
-                            .filter(a -> a.getAnneeAcademique() != null)
-                            .findFirst()
-                            .map(Apprenti::getAnneeAcademique)
-                            .orElse("");
-            model.addAttribute("anneeActuelle", anneeActuelle);
             return "admin/yearmanagement";
         } catch (Exception e) {
             model.addAttribute("error", "Erreur lors du chargement de la page : " + e.getMessage());
@@ -60,25 +57,6 @@ public class AnneeAcademiqueViewController {
             model.addAttribute("anneeActuelle", "");
             return "admin/yearmanagement";
         }
-    }
-
-    @PostMapping("/creer")
-    public String creerNouvelleAnnee(
-            @RequestParam("nouvelleAnnee") String nouvelleAnnee,
-            RedirectAttributes redirectAttributes) {
-        try {
-            if (nouvelleAnnee == null || nouvelleAnnee.trim().isEmpty()) {
-                redirectAttributes.addFlashAttribute("error", "L'année académique est obligatoire");
-                return "redirect:/annee-academique";
-            }
-            apprentiService.creerNouvelleAnneeAcademique(nouvelleAnnee);
-            redirectAttributes.addFlashAttribute("success",
-                "Nouvelle année académique créée avec succès ! Les apprentis ont été promus et les I3 archivés.");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error",
-                "Erreur lors de la création de la nouvelle année : " + e.getMessage());
-        }
-        return "redirect:/annee-academique";
     }
 
     @PostMapping("/creer-suivante")
