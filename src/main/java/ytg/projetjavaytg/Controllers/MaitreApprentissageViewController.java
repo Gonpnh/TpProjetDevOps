@@ -10,6 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ytg.projetjavaytg.Models.MaitreApprentissage;
 import ytg.projetjavaytg.Services.EntrepriseService;
 import ytg.projetjavaytg.Services.MaitreApprentissageService;
+import ytg.projetjavaytg.Services.UtilisateurService;
 
 @Controller
 @RequestMapping("/maitres")
@@ -17,28 +18,32 @@ public class MaitreApprentissageViewController {
 
     private final MaitreApprentissageService maitreApprentissageService;
     private final EntrepriseService entrepriseService;
+    private final UtilisateurService utilisateurService;
 
     public MaitreApprentissageViewController(MaitreApprentissageService maitreApprentissageService,
-                                            EntrepriseService entrepriseService) {
+                                            EntrepriseService entrepriseService,
+                                            UtilisateurService utilisateurService) {
         this.maitreApprentissageService = maitreApprentissageService;
         this.entrepriseService = entrepriseService;
+        this.utilisateurService = utilisateurService;
     }
 
-    private String getCurrentUsername() {
+    private String getCurrentUserPrenom() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication != null ? authentication.getName() : "Utilisateur";
+        String username = authentication != null ? authentication.getName() : "Utilisateur";
+        return utilisateurService.getPrenomByUsername(username);
     }
 
     @GetMapping
     public String list(Model model) {
-        model.addAttribute("username", getCurrentUsername());
+        model.addAttribute("username", getCurrentUserPrenom());
         model.addAttribute("maitres", maitreApprentissageService.getAllMaitresApprentissage());
         return "maitreapprentissage/list";
     }
 
     @GetMapping("/create")
     public String createForm(Model model) {
-        model.addAttribute("username", getCurrentUsername());
+        model.addAttribute("username", getCurrentUserPrenom());
         model.addAttribute("entreprises", entrepriseService.getAllEntreprises());
         return "maitreapprentissage/create";
     }

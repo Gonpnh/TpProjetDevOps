@@ -9,32 +9,36 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ytg.projetjavaytg.Models.Entreprise;
 import ytg.projetjavaytg.Services.EntrepriseService;
+import ytg.projetjavaytg.Services.UtilisateurService;
 
 @Controller
 @RequestMapping("/entreprises")
 public class EntrepriseViewController {
 
     private final EntrepriseService entrepriseService;
+    private final UtilisateurService utilisateurService;
 
-    public EntrepriseViewController(EntrepriseService entrepriseService) {
+    public EntrepriseViewController(EntrepriseService entrepriseService, UtilisateurService utilisateurService) {
         this.entrepriseService = entrepriseService;
+        this.utilisateurService = utilisateurService;
     }
 
-    private String getCurrentUsername() {
+    private String getCurrentUserPrenom() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication != null ? authentication.getName() : "Utilisateur";
+        String username = authentication != null ? authentication.getName() : "Utilisateur";
+        return utilisateurService.getPrenomByUsername(username);
     }
 
     @GetMapping
     public String list(Model model) {
-        model.addAttribute("username", getCurrentUsername());
+        model.addAttribute("username", getCurrentUserPrenom());
         model.addAttribute("entreprises", entrepriseService.getAllEntreprises());
         return "entreprise/list";
     }
 
     @GetMapping("/create")
     public String createForm(Model model) {
-        model.addAttribute("username", getCurrentUsername());
+        model.addAttribute("username", getCurrentUserPrenom());
         return "entreprise/create";
     }
 

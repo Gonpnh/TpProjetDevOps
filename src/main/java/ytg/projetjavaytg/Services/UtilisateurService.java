@@ -38,4 +38,10 @@ public class UtilisateurService {
         }
         return utilisateurRepository.save(utilisateur);
     }
+
+    public String getPrenomByUsername(String username) {
+        return utilisateurRepository.findByUsername(username)
+                .map(Utilisateur::getPrenom)
+                .orElse("Utilisateur");
+    }
 }
