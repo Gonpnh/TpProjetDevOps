@@ -1,6 +1,8 @@
 package ytg.projetjavaytg.Controllers;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,14 +20,21 @@ public class EntrepriseViewController {
         this.entrepriseService = entrepriseService;
     }
 
+    private String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null ? authentication.getName() : "Utilisateur";
+    }
+
     @GetMapping
     public String list(Model model) {
+        model.addAttribute("username", getCurrentUsername());
         model.addAttribute("entreprises", entrepriseService.getAllEntreprises());
         return "entreprise/list";
     }
 
     @GetMapping("/create")
-    public String createForm() {
+    public String createForm(Model model) {
+        model.addAttribute("username", getCurrentUsername());
         return "entreprise/create";
     }
 

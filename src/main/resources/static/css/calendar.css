@@ -22,7 +22,20 @@
     transition: all 0.2s ease;
     box-shadow: 0 2px 4px rgba(0,0,0,0.15);
 }
+.logout-btn {
+    background-color: white;
+    color: #2196F3;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
 
+.logout-btn:hover {
+    background-color: #f0f0f0;
+}
 .fc .fc-daygrid-event:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.25);

@@ -1,5 +1,7 @@
 package ytg.projetjavaytg.Controllers;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,9 +34,16 @@ public class ApprentiViewController {
         this.evaluationService = evaluationService;
     }
 
+    // Méthode helper pour récupérer le nom d'utilisateur actuellement connecté
+    private String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null ? authentication.getName() : "Utilisateur";
+    }
+
     @GetMapping("/create")
     public String createApprentiForm(Model model) {
         String anneeAcademique = anneeAcademiqueService.getAnneeAcademiqueEnCours();
+        model.addAttribute("username", getCurrentUsername());
         model.addAttribute("anneeAcademique", anneeAcademique);
         model.addAttribute("entreprises", entrepriseService.getAllEntreprises());
         model.addAttribute("maitres", maitreApprentissageService.getAllMaitresApprentissage());
@@ -69,6 +78,7 @@ public class ApprentiViewController {
     public String apprentiDetails(@PathVariable Long id, Model model) {
         return apprentiService.getApprentiById(id)
                 .map(apprenti -> {
+                    model.addAttribute("username", getCurrentUsername());
                     model.addAttribute("apprenti", apprenti);
                     // Vérifier si une évaluation existe pour cet apprenti
                     boolean hasEvaluation = evaluationService.getEvaluationByApprentiId(id).isPresent();
@@ -82,6 +92,7 @@ public class ApprentiViewController {
     public String editApprentiForm(@PathVariable Long id, Model model) {
         return apprentiService.getApprentiById(id)
                 .map(apprenti -> {
+                    model.addAttribute("username", getCurrentUsername());
                     model.addAttribute("apprenti", apprenti);
                     model.addAttribute("entreprises", entrepriseService.getAllEntreprises());
                     model.addAttribute("maitres", maitreApprentissageService.getAllMaitresApprentissage());
