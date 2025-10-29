@@ -27,7 +27,7 @@ public class Utilisateur {
     private String role = "ROLE_TUTEUR";
 
     @Column(name = "enabled", nullable = false)
-    private boolean enabled = true;
+    private Boolean enabled = true;
 
     @Column(name = "date_creation", nullable = false, updatable = false)
     private Instant dateCreation;

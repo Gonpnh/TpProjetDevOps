@@ -45,7 +45,7 @@ public class Apprenti {
     private String niveau = "I1";
 
     @Column(name = "archive", nullable = false)
-    private boolean archive = false;
+    private Boolean archive = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "entreprise_id", nullable = false)
