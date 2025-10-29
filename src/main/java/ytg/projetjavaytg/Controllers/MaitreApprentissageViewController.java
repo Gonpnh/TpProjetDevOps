@@ -1,5 +1,6 @@
 package ytg.projetjavaytg.Controllers;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -55,6 +56,8 @@ public class MaitreApprentissageViewController {
                 maitreApprentissageService.deleteMaitreApprentissage(id);
             });
             redirectAttributes.addFlashAttribute("success", "Le maître d'apprentissage a été supprimé avec succès !");
+        } catch (DataIntegrityViolationException e) {
+            redirectAttributes.addFlashAttribute("error", "Impossible de supprimer ce maître d'apprentissage. Il est associé à un ou plusieurs apprentis. Veuillez d'abord modifier ou supprimer ces apprentis.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Erreur lors de la suppression : " + e.getMessage());
         }

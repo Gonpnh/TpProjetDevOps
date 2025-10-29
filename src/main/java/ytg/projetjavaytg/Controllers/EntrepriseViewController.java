@@ -1,5 +1,6 @@
 package ytg.projetjavaytg.Controllers;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +48,8 @@ public class EntrepriseViewController {
                 entrepriseService.deleteEntreprise(id);
             });
             redirectAttributes.addFlashAttribute("success", "L'entreprise a été supprimée avec succès !");
+        } catch (DataIntegrityViolationException e) {
+            redirectAttributes.addFlashAttribute("error", "Impossible de supprimer cette entreprise. Elle est associée à un ou plusieurs apprentis. Veuillez d'abord modifier ou supprimer ces apprentis.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Erreur lors de la suppression : " + e.getMessage());
         }

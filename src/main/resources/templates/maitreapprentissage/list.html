@@ -25,7 +25,9 @@
         <div th:if="${success}" class="alert-success" style="background-color: #e8f5e9; color: #2e7d32; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #66bb6a;">
             <span th:text="${success}"></span>
         </div>
-
+        <div th:if="${error}" class="alert alert-error" style="background-color: #fef2f2; color: #991b1b; padding: 1rem; border-radius: 0.375rem; margin-bottom: 1.5rem; border: 1px solid #fecaca;">
+            <span th:text="${error}"></span>
+        </div>
         <div th:if="${maitres.isEmpty()}" class="alert-empty">
             Aucun maître d'apprentissage enregistré. Ajoutez-en un pour commencer.
         </div>
