@@ -1,5 +1,11 @@
 package ytg.projetjavaytg.DTO;
 
+/*
+ * DTO d'inscription désactivé
+ * La fonctionnalité d'inscription a été retirée du projet
+ */
+
+/*
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,3 +24,4 @@ public class RegisterForm {
     // private Instant dateCreation; // nullifiable
     // private Instant dateDerniereConnexion; // nullifiable
 }
+*/

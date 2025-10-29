@@ -1,7 +1,5 @@
 package ytg.projetjavaytg.Controllers;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +9,7 @@ import ytg.projetjavaytg.Models.Apprenti;
 import ytg.projetjavaytg.Services.ApprentiService;
 import ytg.projetjavaytg.Services.EntrepriseService;
 import ytg.projetjavaytg.Services.AnneeAcademiqueService;
-import ytg.projetjavaytg.Services.UtilisateurService;
+import ytg.projetjavaytg.Utils.SecurityUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,22 +21,13 @@ public class RechercheViewController {
     private final ApprentiService apprentiService;
     private final EntrepriseService entrepriseService;
     private final AnneeAcademiqueService anneeAcademiqueService;
-    private final UtilisateurService utilisateurService;
 
     public RechercheViewController(ApprentiService apprentiService,
                                    EntrepriseService entrepriseService,
-                                   AnneeAcademiqueService anneeAcademiqueService,
-                                   UtilisateurService utilisateurService) {
+                                   AnneeAcademiqueService anneeAcademiqueService) {
         this.apprentiService = apprentiService;
         this.entrepriseService = entrepriseService;
         this.anneeAcademiqueService = anneeAcademiqueService;
-        this.utilisateurService = utilisateurService;
-    }
-
-    private String getCurrentUserPrenom() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication != null ? authentication.getName() : "Utilisateur";
-        return utilisateurService.getPrenomByUsername(username);
     }
 
     @GetMapping
@@ -50,7 +39,7 @@ public class RechercheViewController {
                                         @RequestParam(value = "entreprise", required = false) String entreprise,
                                         @RequestParam(value = "statut", required = false) String statut,
                                         @RequestParam(value = "mission_mots_cles", required = false) String motCle) {
-        model.addAttribute("username", getCurrentUserPrenom());
+        model.addAttribute("username", SecurityUtils.getCurrentUserPrenom());
 
         List<Apprenti> tousLesApprentis = apprentiService.getAllApprentis();
 

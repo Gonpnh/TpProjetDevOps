@@ -4,8 +4,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +15,7 @@ import ytg.projetjavaytg.Repositories.VisiteRepository;
 import ytg.projetjavaytg.Services.ApprentiService;
 import ytg.projetjavaytg.Services.EvaluationService;
 import ytg.projetjavaytg.Services.PdfGenerationService;
-import ytg.projetjavaytg.Services.UtilisateurService;
+import ytg.projetjavaytg.Utils.SecurityUtils;
 
 import java.time.Instant;
 import java.util.List;
@@ -31,24 +29,15 @@ public class EvaluationViewController {
     private final ApprentiService apprentiService;
     private final PdfGenerationService pdfGenerationService;
     private final VisiteRepository visiteRepository;
-    private final UtilisateurService utilisateurService;
 
     public EvaluationViewController(EvaluationService evaluationService,
                                    ApprentiService apprentiService,
                                    PdfGenerationService pdfGenerationService,
-                                   VisiteRepository visiteRepository,
-                                   UtilisateurService utilisateurService) {
+                                   VisiteRepository visiteRepository) {
         this.evaluationService = evaluationService;
         this.apprentiService = apprentiService;
         this.pdfGenerationService = pdfGenerationService;
         this.visiteRepository = visiteRepository;
-        this.utilisateurService = utilisateurService;
-    }
-
-    private String getCurrentUserPrenom() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication != null ? authentication.getName() : "Utilisateur";
-        return utilisateurService.getPrenomByUsername(username);
     }
 
     @GetMapping("/apprenti/{apprentiId}")
@@ -80,7 +69,7 @@ public class EvaluationViewController {
             }
         }
 
-        model.addAttribute("username", getCurrentUserPrenom());
+        model.addAttribute("username", SecurityUtils.getCurrentUserPrenom());
         model.addAttribute("apprenti", apprenti);
         model.addAttribute("evaluation", evaluation);
         model.addAttribute("isNew", evaluationOpt.isEmpty());
@@ -105,7 +94,7 @@ public class EvaluationViewController {
 
         Evaluation evaluation = evaluationOpt.get();
 
-        model.addAttribute("username", getCurrentUserPrenom());
+        model.addAttribute("username", SecurityUtils.getCurrentUserPrenom());
         model.addAttribute("apprenti", apprenti);
         model.addAttribute("evaluation", evaluation);
         model.addAttribute("readOnly", true);

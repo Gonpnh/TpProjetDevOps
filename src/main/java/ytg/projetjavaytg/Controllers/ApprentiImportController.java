@@ -7,15 +7,13 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ytg.projetjavaytg.Services.ExcelImportService;
-import ytg.projetjavaytg.Services.UtilisateurService;
+import ytg.projetjavaytg.Utils.SecurityUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -25,24 +23,14 @@ import java.io.IOException;
 public class ApprentiImportController {
 
     private final ExcelImportService excelImportService;
-    private final UtilisateurService utilisateurService;
 
-    public ApprentiImportController(ExcelImportService excelImportService,
-                                   UtilisateurService utilisateurService) {
+    public ApprentiImportController(ExcelImportService excelImportService) {
         this.excelImportService = excelImportService;
-        this.utilisateurService = utilisateurService;
-    }
-
-    // Méthode helper pour récupérer le prénom de l'utilisateur actuellement connecté
-    private String getCurrentUserPrenom() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication != null ? authentication.getName() : "Utilisateur";
-        return utilisateurService.getPrenomByUsername(username);
     }
 
     @GetMapping("/import")
     public String importForm(Model model) {
-        model.addAttribute("username", getCurrentUserPrenom());
+        model.addAttribute("username", SecurityUtils.getCurrentUserPrenom());
         return "apprentice/import";
     }
 

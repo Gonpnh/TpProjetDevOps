@@ -1,5 +1,11 @@
 package ytg.projetjavaytg.Services;
 
+/*
+ * Service d'inscription désactivé
+ * La fonctionnalité d'inscription a été retirée du projet
+ */
+
+/*
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ytg.projetjavaytg.DTO.RegisterForm;
@@ -30,14 +36,15 @@ public class RegisterService {
         }
         Utilisateur utilisateur = new Utilisateur();
         utilisateur.setUsername(form.getUsername());
-        utilisateur.setEmail(form.getEmail());
+        utilisateur.setPassword(passwordEncoder.encode(form.getPassword()));
         utilisateur.setPrenom(form.getPrenom());
         utilisateur.setNom(form.getNom());
-        utilisateur.setPassword(passwordEncoder.encode(form.getPassword()));
+        utilisateur.setEmail(form.getEmail());
         utilisateur.setRole("ROLE_TUTEUR");
         utilisateur.setEnabled(true);
         utilisateur.setDateCreation(Instant.now());
-        utilisateur.setDateDerniereConnexion(null);
         utilisateurRepository.save(utilisateur);
     }
 }
+
+*/

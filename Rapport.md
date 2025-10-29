@@ -53,6 +53,7 @@ Ce document sert de trame pour remplir le rapport demandé (sections 3.1 à 3.4 
 - - Implémentation de Spring Security pour la gestion de l'authentification et des rôles utilisateurs ainsi que la sécurisation des endpoints et des URLs.
 - - Configuration de SWAGGER / OpenAPI pour la documentation automatique de l'API REST.
 - - Implémentation de certaines pages Thymeleaf comme le calendrier, le système d'évaluation...
+- - Ajout de l'importation des données des étudiants via un fichier CSV.
 - Membre 2 (Gonçalo) :
 - - Intégration de Thymeleaf et développement des ControllerView pour relier les pages web à la logique du back-end.
 - - Configuration de la navigation entre les différentes pages et gestion des liens et redirections dans l’interface utilisateur.

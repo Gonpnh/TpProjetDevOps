@@ -1,13 +1,12 @@
 package ytg.projetjavaytg.Controllers;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ytg.projetjavaytg.Models.Apprenti;
 import ytg.projetjavaytg.Services.*;
+import ytg.projetjavaytg.Utils.SecurityUtils;
 
 @Controller
 @RequestMapping("/apprentis")
@@ -34,17 +33,10 @@ public class ApprentiViewController {
         this.evaluationService = evaluationService;
     }
 
-    // Méthode helper pour récupérer le prénom de l'utilisateur actuellement connecté
-    private String getCurrentUserPrenom() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication != null ? authentication.getName() : "Utilisateur";
-        return utilisateurService.getPrenomByUsername(username);
-    }
-
     @GetMapping("/create")
     public String createApprentiForm(Model model) {
         String anneeAcademique = anneeAcademiqueService.getAnneeAcademiqueEnCours();
-        model.addAttribute("username", getCurrentUserPrenom());
+        model.addAttribute("username", SecurityUtils.getCurrentUserPrenom());
         model.addAttribute("anneeAcademique", anneeAcademique);
         model.addAttribute("entreprises", entrepriseService.getAllEntreprises());
         model.addAttribute("maitres", maitreApprentissageService.getAllMaitresApprentissage());
@@ -79,7 +71,7 @@ public class ApprentiViewController {
     public String apprentiDetails(@PathVariable Long id, Model model) {
         return apprentiService.getApprentiById(id)
                 .map(apprenti -> {
-                    model.addAttribute("username", getCurrentUserPrenom());
+                    model.addAttribute("username", SecurityUtils.getCurrentUserPrenom());
                     model.addAttribute("apprenti", apprenti);
                     // Vérifier si une évaluation existe pour cet apprenti
                     boolean hasEvaluation = evaluationService.getEvaluationByApprentiId(id).isPresent();
@@ -93,7 +85,7 @@ public class ApprentiViewController {
     public String editApprentiForm(@PathVariable Long id, Model model) {
         return apprentiService.getApprentiById(id)
                 .map(apprenti -> {
-                    model.addAttribute("username", getCurrentUserPrenom());
+                    model.addAttribute("username", SecurityUtils.getCurrentUserPrenom());
                     model.addAttribute("apprenti", apprenti);
                     model.addAttribute("entreprises", entrepriseService.getAllEntreprises());
                     model.addAttribute("maitres", maitreApprentissageService.getAllMaitresApprentissage());
