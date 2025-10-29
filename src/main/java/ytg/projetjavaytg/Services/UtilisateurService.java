@@ -18,7 +18,6 @@ public class UtilisateurService {
         this.utilisateurRepository = utilisateurRepository;
     }
 
-    // TODO il serait recommandé d'encoder le mot de passe avec BCrypt avant de le sauvegarder (en utilisant PasswordEncoder)
     public List<Utilisateur> getAllUtilisateurs() {
         return utilisateurRepository.findAll();
     }
