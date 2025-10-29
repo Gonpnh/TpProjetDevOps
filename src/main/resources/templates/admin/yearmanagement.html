@@ -10,22 +10,16 @@
     <div class="header">
         <h1>ASTA - Gestion Année Académique</h1>
         <div class="user-info">
-            <span>Bonjour, <strong th:text="${username}">Utilisateur</strong></span>
-            <form th:action="@{/logout}" method="post" style="margin: 0;">
-                <button type="submit" class="logout-btn">Déconnexion</button>
-            </form>
+            <a th:href="@{/dashboard}" class="back-btn">← Retour au tableau de bord</a>
         </div>
     </div>
 
     <div class="container">
-        <a th:href="@{/dashboard}" class="btn-back">← Retour au tableau de bord</a>
-
         <div class="page-header">
             <h2>Créer une nouvelle année académique</h2>
             <p class="subtitle">Cette action va promouvoir les apprentis et archiver les I3</p>
         </div>
 
-        <!-- Messages flash -->
         <div th:if="${success}" class="alert alert-success">
             <span th:text="${success}"></span>
         </div>
@@ -33,7 +27,6 @@
             <span th:text="${error}"></span>
         </div>
 
-        <!-- Statistiques actuelles -->
         <div class="stats-container">
             <h3>Situation actuelle</h3>
             <div class="stats-grid">
@@ -62,7 +55,6 @@
             </div>
         </div>
 
-        <!-- Formulaire de création automatique -->
         <div class="form-container primary-action">
             <h3>Créer la nouvelle année automatiquement</h3>
             <p class="description">Cliquez sur le bouton ci-dessous pour passer automatiquement à l'année suivante</p>

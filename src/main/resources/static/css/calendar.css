@@ -89,6 +89,19 @@
     color: #2196F3;
 }
 
+.back-btn {
+    background-color: white;
+    color: #2196F3;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+.back-btn:hover {
+    background-color: #f0f0f0;
+}
+
 .visite-detail-body {
     display: flex;
     flex-direction: column;
