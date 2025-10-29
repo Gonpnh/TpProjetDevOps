@@ -16,17 +16,20 @@ public class ApprentiViewController {
     private final MaitreApprentissageService maitreApprentissageService;
     private final UtilisateurService utilisateurService;
     private final AnneeAcademiqueService anneeAcademiqueService;
+    private final EvaluationService evaluationService;
 
     public ApprentiViewController(ApprentiService apprentiService,
                                   EntrepriseService entrepriseService,
                                   MaitreApprentissageService maitreApprentissageService,
                                   UtilisateurService utilisateurService,
-                                  AnneeAcademiqueService anneeAcademiqueService) {
+                                  AnneeAcademiqueService anneeAcademiqueService,
+                                  EvaluationService evaluationService) {
         this.apprentiService = apprentiService;
         this.entrepriseService = entrepriseService;
         this.maitreApprentissageService = maitreApprentissageService;
         this.utilisateurService = utilisateurService;
         this.anneeAcademiqueService = anneeAcademiqueService;
+        this.evaluationService = evaluationService;
     }
 
     @GetMapping("/create")
@@ -67,6 +70,9 @@ public class ApprentiViewController {
         return apprentiService.getApprentiById(id)
                 .map(apprenti -> {
                     model.addAttribute("apprenti", apprenti);
+                    // Vérifier si une évaluation existe pour cet apprenti
+                    boolean hasEvaluation = evaluationService.getEvaluationByApprentiId(id).isPresent();
+                    model.addAttribute("hasEvaluation", hasEvaluation);
                     return "apprentice/details";
                 })
                 .orElse("redirect:/dashboard");
