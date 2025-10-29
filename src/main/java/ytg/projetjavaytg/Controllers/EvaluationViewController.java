@@ -17,6 +17,7 @@ import ytg.projetjavaytg.Repositories.VisiteRepository;
 import ytg.projetjavaytg.Services.ApprentiService;
 import ytg.projetjavaytg.Services.EvaluationService;
 import ytg.projetjavaytg.Services.PdfGenerationService;
+import ytg.projetjavaytg.Services.UtilisateurService;
 
 import java.time.Instant;
 import java.util.List;
@@ -30,20 +31,24 @@ public class EvaluationViewController {
     private final ApprentiService apprentiService;
     private final PdfGenerationService pdfGenerationService;
     private final VisiteRepository visiteRepository;
+    private final UtilisateurService utilisateurService;
 
     public EvaluationViewController(EvaluationService evaluationService,
                                    ApprentiService apprentiService,
                                    PdfGenerationService pdfGenerationService,
-                                   VisiteRepository visiteRepository) {
+                                   VisiteRepository visiteRepository,
+                                   UtilisateurService utilisateurService) {
         this.evaluationService = evaluationService;
         this.apprentiService = apprentiService;
         this.pdfGenerationService = pdfGenerationService;
         this.visiteRepository = visiteRepository;
+        this.utilisateurService = utilisateurService;
     }
 
-    private String getCurrentUsername() {
+    private String getCurrentUserPrenom() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication != null ? authentication.getName() : "Utilisateur";
+        String username = authentication != null ? authentication.getName() : "Utilisateur";
+        return utilisateurService.getPrenomByUsername(username);
     }
 
     @GetMapping("/apprenti/{apprentiId}")
@@ -75,7 +80,7 @@ public class EvaluationViewController {
             }
         }
 
-        model.addAttribute("username", getCurrentUsername());
+        model.addAttribute("username", getCurrentUserPrenom());
         model.addAttribute("apprenti", apprenti);
         model.addAttribute("evaluation", evaluation);
         model.addAttribute("isNew", evaluationOpt.isEmpty());
@@ -100,7 +105,7 @@ public class EvaluationViewController {
 
         Evaluation evaluation = evaluationOpt.get();
 
-        model.addAttribute("username", getCurrentUsername());
+        model.addAttribute("username", getCurrentUserPrenom());
         model.addAttribute("apprenti", apprenti);
         model.addAttribute("evaluation", evaluation);
         model.addAttribute("readOnly", true);

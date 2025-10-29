@@ -6,27 +6,26 @@ import lombok.Setter;
 
 import java.time.Instant;
 
-@Getter
-@Setter
+@Getter @Setter
 @Entity
 @Table(name = "annee_academique")
 public class AnneeAcademique {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
     @Column(name = "annee", nullable = false, unique = true, length = 20)
-    private String annee;  // Format: "2025-2026"
+    private String annee;
 
     @Column(name = "active", nullable = false)
-    private Boolean active = false;  // Une seule année peut être active
+    private boolean active = false;
 
-    @Column(name = "date_creation", nullable = false)
+    @Column(name = "date_creation", nullable = false, updatable = false)
     private Instant dateCreation;
 
-    @Column(name = "date_activation")
-    private Instant dateActivation;
-}
+    @Column(name = "date_activation") private Instant dateActivation;
 
+    @PrePersist
+    void prePersist() { this.dateCreation = Instant.now(); }
+}

@@ -19,12 +19,10 @@ public class Entreprise {
     @Column(name = "raison_sociale", nullable = false, length = 200)
     private String raisonSociale;
 
-    @Lob
-    @Column(name = "adresse")
+    @Column(name = "adresse", columnDefinition = "TEXT")
     private String adresse;
 
-    @Lob
-    @Column(name = "informations_acces")
+    @Column(name = "informations_acces", columnDefinition = "TEXT")
     private String informationsAcces;
 
 }

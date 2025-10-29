@@ -9,6 +9,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ytg.projetjavaytg.Models.Apprenti;
 import ytg.projetjavaytg.Services.AnneeAcademiqueService;
 import ytg.projetjavaytg.Services.ApprentiService;
+import ytg.projetjavaytg.Services.UtilisateurService;
 
 import java.util.List;
 import java.util.Map;
@@ -20,10 +21,13 @@ public class AnneeAcademiqueViewController {
 
     private final ApprentiService apprentiService;
     private final AnneeAcademiqueService anneeAcademiqueService;
+    private final UtilisateurService utilisateurService;
 
-    public AnneeAcademiqueViewController(ApprentiService apprentiService, AnneeAcademiqueService anneeAcademiqueService) {
+    public AnneeAcademiqueViewController(ApprentiService apprentiService, AnneeAcademiqueService anneeAcademiqueService,
+                                        UtilisateurService utilisateurService) {
         this.apprentiService = apprentiService;
         this.anneeAcademiqueService = anneeAcademiqueService;
+        this.utilisateurService = utilisateurService;
     }
 
     @GetMapping
@@ -31,7 +35,8 @@ public class AnneeAcademiqueViewController {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
-            model.addAttribute("username", username);
+            String prenom = utilisateurService.getPrenomByUsername(username);
+            model.addAttribute("username", prenom);
 
             String anneeActuelle = anneeAcademiqueService.getAnneeAcademiqueEnCours();
             model.addAttribute("anneeActuelle", anneeActuelle);
@@ -58,6 +63,7 @@ public class AnneeAcademiqueViewController {
             return "admin/yearmanagement";
         }
     }
+
 
     @PostMapping("/creer-suivante")
     public String creerAnneeSuivante(RedirectAttributes redirectAttributes) {

@@ -10,6 +10,7 @@ import ytg.projetjavaytg.Models.Apprenti;
 import ytg.projetjavaytg.Models.Visite;
 import ytg.projetjavaytg.Services.ApprentiService;
 import ytg.projetjavaytg.Services.VisiteService;
+import ytg.projetjavaytg.Services.UtilisateurService;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -23,15 +24,18 @@ public class VisiteViewController {
 
     private final VisiteService visiteService;
     private final ApprentiService apprentiService;
+    private final UtilisateurService utilisateurService;
 
-    public VisiteViewController(VisiteService visiteService, ApprentiService apprentiService) {
+    public VisiteViewController(VisiteService visiteService, ApprentiService apprentiService, UtilisateurService utilisateurService) {
         this.visiteService = visiteService;
         this.apprentiService = apprentiService;
+        this.utilisateurService = utilisateurService;
     }
 
-    private String getCurrentUsername() {
+    private String getCurrentUserPrenom() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication != null ? authentication.getName() : "Utilisateur";
+        String username = authentication != null ? authentication.getName() : "Utilisateur";
+        return utilisateurService.getPrenomByUsername(username);
     }
 
     @GetMapping
@@ -78,7 +82,7 @@ public class VisiteViewController {
         // Préparer label du mois
         String monthLabel = base.getMonth().getDisplayName(TextStyle.FULL, Locale.FRENCH) + " " + base.getYear();
 
-        model.addAttribute("username", getCurrentUsername());
+        model.addAttribute("username", getCurrentUserPrenom());
         model.addAttribute("calendar", calendar);
         model.addAttribute("currentMonthLabel", monthLabel);
         model.addAttribute("apprentis", apprentiService.getAllApprentis());
