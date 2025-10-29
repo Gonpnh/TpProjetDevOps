@@ -20,7 +20,7 @@ public class MaitreApprentissage {
     @Column(name = "email", length = 150) private String email;
     @Column(name = "telephone", length = 20) private String telephone;
 
-    @Lob @Column(name = "remarques") private String remarques;
+    @Column(name = "remarques", columnDefinition = "TEXT") private String remarques;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "entreprise_id", nullable = false)

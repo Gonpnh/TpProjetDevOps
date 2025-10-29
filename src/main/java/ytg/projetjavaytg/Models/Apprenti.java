@@ -62,19 +62,19 @@ public class Apprenti {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Utilisateur tuteurEnseignant;
 
-    @Lob @Column(name = "mission_mots_cles")
+    @Column(name = "mission_mots_cles", columnDefinition = "TEXT")
     private String missionMotsCles;
 
     @Column(name = "mission_metier_cible", length = 200)
     private String missionMetierCible;
 
-    @Lob @Column(name = "mission_commentaires")
+    @Column(name = "mission_commentaires", columnDefinition = "TEXT")
     private String missionCommentaires;
 
-    @Lob @Column(name = "feedback_tuteur")
+    @Column(name = "feedback_tuteur", columnDefinition = "TEXT")
     private String feedbackTuteur;
 
-    @Lob @Column(name = "remarques_generales")
+    @Column(name = "remarques_generales",columnDefinition = "TEXT")
     private String remarquesGenerales;
 
     @Column(name = "date_creation", nullable = false, updatable = false)

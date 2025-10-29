@@ -27,13 +27,13 @@ public class Evaluation {
 
     @Column(name = "memoire_theme") private String memoireTheme;
     @Column(name = "memoire_note", precision = 4, scale = 2) private BigDecimal memoireNote;
-    @Lob @Column(name = "memoire_commentaires") private String memoireCommentaires;
+    @Column(name = "memoire_commentaires", columnDefinition = "TEXT") private String memoireCommentaires;
 
     @Column(name = "soutenance_date") private LocalDate soutenanceDate;
     @Column(name = "soutenance_note", precision = 4, scale = 2) private BigDecimal soutenanceNote;
-    @Lob @Column(name = "soutenance_commentaires") private String soutenanceCommentaires;
+    @Column(name = "soutenance_commentaires", columnDefinition = "TEXT") private String soutenanceCommentaires;
 
-    @Lob @Column(name = "remarques_generales") private String remarquesGenerales;
+    @Column(name = "remarques_generales", columnDefinition = "TEXT") private String remarquesGenerales;
 
     @Column(name = "date_creation", nullable = false, updatable = false)
     private Instant dateCreation;

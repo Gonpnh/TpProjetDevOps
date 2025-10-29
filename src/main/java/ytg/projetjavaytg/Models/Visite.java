@@ -25,7 +25,7 @@ public class Visite {
     @Column(name = "date_visite") private LocalDate dateVisite;
     @Column(name = "format", length = 20) private String format;
 
-    @Lob @Column(name = "commentaires") private String commentaires;
+    @Column(name = "commentaires", columnDefinition = "TEXT") private String commentaires;
 
     @Column(name = "date_creation", nullable = false, updatable = false)
     private Instant dateCreation;
