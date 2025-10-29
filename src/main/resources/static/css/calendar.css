@@ -34,9 +34,30 @@
 }
 
 /* ensure header stays below modal */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
 .header {
-    position: relative;
-    z-index: 1000;
+    background-color: #2196F3;
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    margin: 0;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
 .modal-overlay {
