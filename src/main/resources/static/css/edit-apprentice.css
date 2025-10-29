@@ -18,7 +18,20 @@ body {
     margin: 0;
     font-size: 24px;
 }
+.logout-btn {
+    background-color: white;
+    color: #2196F3;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
 
+.logout-btn:hover {
+    background-color: #f0f0f0;
+}
 .user-info {
     display: flex;
     align-items: center;
@@ -26,14 +39,18 @@ body {
 }
 
 .back-btn {
-    color: white;
+    background-color: white;
+    color: #2196F3;
+    padding: 10px 20px;
     text-decoration: none;
-    font-size: 16px;
-    transition: opacity 0.2s;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
 }
 
 .back-btn:hover {
-    opacity: 0.8;
+    background-color: #f0f0f0;
 }
 
 .container {

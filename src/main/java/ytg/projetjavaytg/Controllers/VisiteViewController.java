@@ -1,5 +1,7 @@
 package ytg.projetjavaytg.Controllers;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,11 @@ public class VisiteViewController {
     public VisiteViewController(VisiteService visiteService, ApprentiService apprentiService) {
         this.visiteService = visiteService;
         this.apprentiService = apprentiService;
+    }
+
+    private String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null ? authentication.getName() : "Utilisateur";
     }
 
     @GetMapping
@@ -71,6 +78,7 @@ public class VisiteViewController {
         // Préparer label du mois
         String monthLabel = base.getMonth().getDisplayName(TextStyle.FULL, Locale.FRENCH) + " " + base.getYear();
 
+        model.addAttribute("username", getCurrentUsername());
         model.addAttribute("calendar", calendar);
         model.addAttribute("currentMonthLabel", monthLabel);
         model.addAttribute("apprentis", apprentiService.getAllApprentis());

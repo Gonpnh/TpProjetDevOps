@@ -109,6 +109,21 @@ body {
     flex-direction: column;
 }
 
+.logout-btn {
+    background-color: white;
+    color: #2196F3;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.logout-btn:hover {
+    background-color: #f0f0f0;
+}
+
 .info-item label {
     font-weight: bold;
     color: #555;

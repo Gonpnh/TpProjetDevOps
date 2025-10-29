@@ -11,6 +11,7 @@
         <h1>ASTA - Recherche</h1>
         <div class="user-info">
             <span>Bonjour, <strong th:text="${username}">Utilisateur</strong></span>
+            <a th:href="@{/dashboard}" class="back-btn">← Retour au tableau de bord</a>
             <form th:action="@{/logout}" method="post" style="margin: 0;">
                 <button type="submit" class="logout-btn">Déconnexion</button>
             </form>
@@ -18,8 +19,6 @@
     </div>
 
     <div class="container">
-        <a th:href="@{/dashboard}" class="btn-back">← Retour au tableau de bord</a>
-
         <div class="page-header">
             <h2>Recherche d'apprentis</h2>
             <p class="subtitle">Liste complète de tous les apprentis (actifs et archivés)</p>

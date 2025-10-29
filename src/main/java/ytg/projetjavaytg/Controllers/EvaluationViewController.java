@@ -4,6 +4,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +41,11 @@ public class EvaluationViewController {
         this.visiteRepository = visiteRepository;
     }
 
+    private String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null ? authentication.getName() : "Utilisateur";
+    }
+
     @GetMapping("/apprenti/{apprentiId}")
     public String showEvaluationForm(@PathVariable Long apprentiId, Model model) {
         Optional<Apprenti> apprentiOpt = apprentiService.getApprentiById(apprentiId);
@@ -68,6 +75,7 @@ public class EvaluationViewController {
             }
         }
 
+        model.addAttribute("username", getCurrentUsername());
         model.addAttribute("apprenti", apprenti);
         model.addAttribute("evaluation", evaluation);
         model.addAttribute("isNew", evaluationOpt.isEmpty());
@@ -92,6 +100,7 @@ public class EvaluationViewController {
 
         Evaluation evaluation = evaluationOpt.get();
 
+        model.addAttribute("username", getCurrentUsername());
         model.addAttribute("apprenti", apprenti);
         model.addAttribute("evaluation", evaluation);
         model.addAttribute("readOnly", true);

@@ -17,13 +17,6 @@ body {
 .header h1 {
     margin: 0;
 }
-
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
 .logout-btn {
     background-color: white;
     color: #2196F3;
@@ -36,6 +29,26 @@ body {
 }
 
 .logout-btn:hover {
+    background-color: #f0f0f0;
+}
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.back-btn {
+    background-color: white;
+    color: #2196F3;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.back-btn:hover {
     background-color: #f0f0f0;
 }
 

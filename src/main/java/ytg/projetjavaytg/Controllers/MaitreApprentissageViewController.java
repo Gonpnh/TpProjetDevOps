@@ -1,5 +1,8 @@
 package ytg.projetjavaytg.Controllers;
 
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,14 +24,21 @@ public class MaitreApprentissageViewController {
         this.entrepriseService = entrepriseService;
     }
 
+    private String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null ? authentication.getName() : "Utilisateur";
+    }
+
     @GetMapping
     public String list(Model model) {
+        model.addAttribute("username", getCurrentUsername());
         model.addAttribute("maitres", maitreApprentissageService.getAllMaitresApprentissage());
         return "maitreapprentissage/list";
     }
 
     @GetMapping("/create")
     public String createForm(Model model) {
+        model.addAttribute("username", getCurrentUsername());
         model.addAttribute("entreprises", entrepriseService.getAllEntreprises());
         return "maitreapprentissage/create";
     }
@@ -55,6 +65,8 @@ public class MaitreApprentissageViewController {
                 maitreApprentissageService.deleteMaitreApprentissage(id);
             });
             redirectAttributes.addFlashAttribute("success", "Le maître d'apprentissage a été supprimé avec succès !");
+        } catch (DataIntegrityViolationException e) {
+            redirectAttributes.addFlashAttribute("error", "Impossible de supprimer ce maître d'apprentissage. Il est associé à un ou plusieurs apprentis. Veuillez d'abord modifier ou supprimer ces apprentis.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Erreur lors de la suppression : " + e.getMessage());
         }
