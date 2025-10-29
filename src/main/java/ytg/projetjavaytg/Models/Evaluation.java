@@ -4,9 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -15,50 +12,44 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name = "evaluation")
+@Table(name = "evaluation",
+        uniqueConstraints = @UniqueConstraint(name = "uk_evaluation_apprenti", columnNames = "apprenti_id"))
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Evaluation {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "apprenti_id", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Apprenti apprenti;
 
-    @Column(name = "memoire_theme")
-    private String memoireTheme;
+    @Column(name = "memoire_theme") private String memoireTheme;
+    @Column(name = "memoire_note", precision = 4, scale = 2) private BigDecimal memoireNote;
+    @Lob @Column(name = "memoire_commentaires") private String memoireCommentaires;
 
-    @Column(name = "memoire_note", precision = 4, scale = 2)
-    private BigDecimal memoireNote;
+    @Column(name = "soutenance_date") private LocalDate soutenanceDate;
+    @Column(name = "soutenance_note", precision = 4, scale = 2) private BigDecimal soutenanceNote;
+    @Lob @Column(name = "soutenance_commentaires") private String soutenanceCommentaires;
 
-    @Lob
-    @Column(name = "memoire_commentaires")
-    private String memoireCommentaires;
+    @Lob @Column(name = "remarques_generales") private String remarquesGenerales;
 
-    @Column(name = "soutenance_date")
-    private LocalDate soutenanceDate;
-
-    @Column(name = "soutenance_note", precision = 4, scale = 2)
-    private BigDecimal soutenanceNote;
-
-    @Lob
-    @Column(name = "soutenance_commentaires")
-    private String soutenanceCommentaires;
-
-    @Lob
-    @Column(name = "remarques_generales")
-    private String remarquesGenerales;
-
-    @ColumnDefault("current_timestamp()")
-    @Column(name = "date_creation", nullable = false)
+    @Column(name = "date_creation", nullable = false, updatable = false)
     private Instant dateCreation;
 
-    @ColumnDefault("current_timestamp()")
     @Column(name = "date_modification", nullable = false)
     private Instant dateModification;
 
+    @PrePersist
+    void prePersist() {
+        Instant now = Instant.now();
+        this.dateCreation = now;
+        this.dateModification = now;
+    }
+
+    @PreUpdate
+    void preUpdate() {
+        this.dateModification = Instant.now();
+    }
 }
