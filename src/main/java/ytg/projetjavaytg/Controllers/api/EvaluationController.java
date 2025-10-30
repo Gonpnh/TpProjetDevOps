@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ytg.projetjavaytg.Models.Evaluation;
 import ytg.projetjavaytg.Services.EvaluationService;
+import ytg.projetjavaytg.exception.ResourceNotFoundException;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class EvaluationController {
     public ResponseEntity<Evaluation> getEvaluationById(@PathVariable Long id) {
         return evaluationService.getEvaluationById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("L'Evaluation que vous voulez trouver n'existe pas"));
     }
 
     @PostMapping

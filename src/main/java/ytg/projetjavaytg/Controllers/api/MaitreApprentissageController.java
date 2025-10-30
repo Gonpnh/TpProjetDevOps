@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ytg.projetjavaytg.Models.MaitreApprentissage;
 import ytg.projetjavaytg.Services.MaitreApprentissageService;
+import ytg.projetjavaytg.exception.ResourceNotFoundException;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class MaitreApprentissageController {
     public ResponseEntity<MaitreApprentissage> getMaitreApprentissageById(@PathVariable Long id) {
         return maitreApprentissageService.getMaitreApprentissageById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Aucun apprenti trouvé avec l'id " + id ));
     }
 
     @PostMapping
@@ -43,5 +44,11 @@ public class MaitreApprentissageController {
     public ResponseEntity<Void> deleteMaitreApprentissage(@PathVariable Long id) {
         maitreApprentissageService.deleteMaitreApprentissage(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("by-raison-sociale/{raisonSociale}")
+    public ResponseEntity<List<MaitreApprentissage>> getByRaisonSociale(@PathVariable String raisonSociale) {
+        List<MaitreApprentissage> maitres = maitreApprentissageService.findAllMaitresApprentissage(raisonSociale);
+        return ResponseEntity.ok(maitres);
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ytg.projetjavaytg.Models.Entreprise;
 import ytg.projetjavaytg.Repositories.EntrepriseRepository;
+import ytg.projetjavaytg.exception.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,11 +19,19 @@ public class EntrepriseService {
     }
 
     public List<Entreprise> getAllEntreprises() {
-        return entrepriseRepository.findAll();
+        List<Entreprise> entreprises = entrepriseRepository.findAll();
+        if (entreprises.isEmpty()){
+            throw new ResourceNotFoundException("Aucune entreprise en base");
+        }
+        return entreprises;
     }
 
     public Optional<Entreprise> getEntrepriseById(Long id) {
-        return entrepriseRepository.findById(id);
+        Optional<Entreprise> entreprise = entrepriseRepository.findById(id);
+        if (entreprise.isPresent()){
+            return entreprise;
+        }
+        throw new ResourceNotFoundException("Aucune entreprise trouvée avec l'id " + id);
     }
 
     @Transactional
@@ -32,6 +41,8 @@ public class EntrepriseService {
 
     @Transactional
     public void deleteEntreprise(Long id) {
+        entrepriseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("L'entreprise que vous voulez supprimer n'existe pas" ));
         entrepriseRepository.deleteById(id);
     }
 }

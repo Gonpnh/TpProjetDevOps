@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ytg.projetjavaytg.Models.Evaluation;
 import ytg.projetjavaytg.Repositories.EvaluationRepository;
+import ytg.projetjavaytg.exception.ResourceNotFoundException;
 
 import java.time.Instant;
 import java.util.List;
@@ -19,11 +20,19 @@ public class EvaluationService {
     }
 
     public List<Evaluation> getAllEvaluations() {
-        return evaluationRepository.findAll();
+        List<Evaluation> evaluations = evaluationRepository.findAll();
+        if (evaluations.isEmpty()){
+            throw new ResourceNotFoundException("Aucune evaluation en base");
+        }
+        return evaluations;
     }
 
     public Optional<Evaluation> getEvaluationById(Long id) {
-        return evaluationRepository.findById(id);
+        Optional<Evaluation> evaluation = evaluationRepository.findById(id);
+        if (evaluation.isPresent()){
+            return evaluation;
+        }
+        throw new ResourceNotFoundException("Aucune evaluation trouver avec id " + id);
     }
 
     public Optional<Evaluation> getEvaluationByApprentiId(Long apprentiId) {

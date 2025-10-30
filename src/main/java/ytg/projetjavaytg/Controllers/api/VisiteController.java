@@ -1,5 +1,6 @@
 package ytg.projetjavaytg.Controllers.api;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import ytg.projetjavaytg.exception.ResourceNotFoundException;
 
 @Tag(name = "Visite")
 @RestController
@@ -36,7 +38,7 @@ public class VisiteController {
     public ResponseEntity<Visite> getVisiteById(@PathVariable Long id) {
         return visiteService.getVisiteById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Aucune viste trouvé avec l'id " + id ));
     }
 
     @PostMapping
@@ -72,7 +74,7 @@ public class VisiteController {
             } else if (f.equals("distance") || f.equals("à distance") || f.equals("a distance") || f.equals("adistance")) {
                 savedFormat = "distance";
             } else {
-                return ResponseEntity.badRequest().body("format must be one of: présentiel, hybride, distance");
+                return ResponseEntity.badRequest().body("Le format doit être : présentiel, hybride, distance");
             }
         }
 
@@ -90,7 +92,7 @@ public class VisiteController {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
                     }
                 })
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Apprenti not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Aucun apprenti trouvé avec l'id " + dto.getApprentiId()));
     }
 
 }

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ytg.projetjavaytg.Models.Apprenti;
 import ytg.projetjavaytg.Repositories.ApprentiRepository;
+import ytg.projetjavaytg.exception.ResourceNotFoundException;
 
 import java.time.Instant;
 import java.util.List;
@@ -22,11 +23,19 @@ public class ApprentiService {
     }
 
     public List<Apprenti> getAllApprentis() {
-        return apprentiRepository.findAll();
+        List<Apprenti> apprentis = apprentiRepository.findAll();
+        if (apprentis.isEmpty()){
+            throw new ResourceNotFoundException("Aucun apprenti existant en base");
+        }
+        return apprentis;
     }
 
     public Optional<Apprenti> getApprentiById(Long id) {
-        return apprentiRepository.findById(id);
+        Optional<Apprenti> apprenti = apprentiRepository.findById(id);
+        if (apprenti.isPresent()){
+            return apprenti;
+        }
+        throw new ResourceNotFoundException("Aucun apprenti trouvé avec l'id " + id);
     }
 
     @Transactional
@@ -48,9 +57,17 @@ public class ApprentiService {
 
     @Transactional
     public void deleteApprenti(Long id) {
+        apprentiRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("L'apprenti que vous voulez supprimer n'existe pas" ));
         apprentiRepository.deleteById(id);
     }
 
+    public List<Apprenti> getAllByRaisonSociale(String raisonSociale) {
+        List<Apprenti> apprentis = apprentiRepository.findAllByRaisonSocialeIgnoreCase(raisonSociale);
+        if (apprentis.isEmpty()){
+            throw new ResourceNotFoundException("Aucun apprenti trouvé dans l'entreprise " + raisonSociale);
+        }
+        return apprentis;
     public List<Apprenti> getApprentisNonArchives() {
         return apprentiRepository.findByArchiveFalse();
     }

@@ -1,9 +1,11 @@
 package ytg.projetjavaytg.Services;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ytg.projetjavaytg.Models.Visite;
 import ytg.projetjavaytg.Repositories.VisiteRepository;
+import ytg.projetjavaytg.exception.ResourceNotFoundException;
 
 import java.time.Instant;
 import java.util.List;
@@ -19,11 +21,19 @@ public class VisiteService {
     }
 
     public List<Visite> getAllVisites() {
-        return visiteRepository.findAll();
+        List<Visite>  visites = visiteRepository.findAll();
+        if (visites.isEmpty()){
+            throw new RuntimeException("Aucune visite en base");
+        }
+        return visites;
     }
 
     public Optional<Visite> getVisiteById(Long id) {
-        return visiteRepository.findById(id);
+        Optional<Visite> visite = visiteRepository.findById(id);
+        if (visite.isPresent()){
+            return visite;
+        }
+        throw new ResourceNotFoundException("Aucune visite trouver avec l'id " + id);
     }
 
     @Transactional
