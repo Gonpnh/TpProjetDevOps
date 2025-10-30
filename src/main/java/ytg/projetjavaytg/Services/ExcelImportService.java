@@ -1,5 +1,6 @@
 package ytg.projetjavaytg.Services;
 
+import lombok.Getter;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
@@ -240,23 +241,18 @@ public class ExcelImportService {
         }
     }
 
+    @Getter
     public static class ImportResult {
-        private final List<Apprenti> createdApprentis;
         private final List<String> errors;
         private final int totalRows;
         private final int successfulImports;
 
         public ImportResult(List<Apprenti> createdApprentis, List<String> errors, int totalRows, int successfulImports) {
-            this.createdApprentis = createdApprentis;
             this.errors = errors;
             this.totalRows = totalRows;
             this.successfulImports = successfulImports;
         }
 
-        public List<Apprenti> getCreatedApprentis() { return createdApprentis; }
-        public List<String> getErrors() { return errors; }
-        public int getTotalRows() { return totalRows; }
-        public int getSuccessfulImports() { return successfulImports; }
         public boolean hasErrors() { return !errors.isEmpty(); }
     }
 }
