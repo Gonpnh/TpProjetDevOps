@@ -21,8 +21,6 @@ public class ApprentiService {
         this.anneeAcademiqueService = anneeAcademiqueService;
     }
 
-    // mettre @Transactional sur les methodes qui modifient la base de données
-
     public List<Apprenti> getAllApprentis() {
         return apprentiRepository.findAll();
     }
@@ -55,10 +53,6 @@ public class ApprentiService {
 
     public List<Apprenti> getApprentisNonArchives() {
         return apprentiRepository.findByArchiveFalse();
-    }
-
-    public List<Apprenti> getApprentisByNiveau(String niveau) {
-        return apprentiRepository.findByNiveauAndArchiveFalse(niveau);
     }
 
     @Transactional

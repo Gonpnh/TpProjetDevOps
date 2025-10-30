@@ -10,11 +10,7 @@ import java.util.List;
 
 public interface ApprentiRepository extends JpaRepository<Apprenti,Long> {
 
-    List<Apprenti> findByNiveau(String niveau);
-
     List<Apprenti> findByArchiveFalse();
-
-    List<Apprenti> findByNiveauAndArchiveFalse(String niveau);
 
     // Met à jour le niveau des apprentis avec JPQL
     @Modifying
