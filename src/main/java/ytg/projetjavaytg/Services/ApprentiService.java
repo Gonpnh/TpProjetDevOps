@@ -68,6 +68,8 @@ public class ApprentiService {
             throw new ResourceNotFoundException("Aucun apprenti trouvé dans l'entreprise " + raisonSociale);
         }
         return apprentis;
+    }
+
     public List<Apprenti> getApprentisNonArchives() {
         return apprentiRepository.findByArchiveFalse();
     }
