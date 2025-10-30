@@ -1,44 +1,34 @@
 package ytg.projetjavaytg.Controllers;
 
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ytg.projetjavaytg.Models.Entreprise;
 import ytg.projetjavaytg.Services.EntrepriseService;
-import ytg.projetjavaytg.Services.UtilisateurService;
+import ytg.projetjavaytg.Utils.SecurityUtils;
 
 @Controller
 @RequestMapping("/entreprises")
 public class EntrepriseViewController {
 
     private final EntrepriseService entrepriseService;
-    private final UtilisateurService utilisateurService;
 
-    public EntrepriseViewController(EntrepriseService entrepriseService, UtilisateurService utilisateurService) {
+    public EntrepriseViewController(EntrepriseService entrepriseService) {
         this.entrepriseService = entrepriseService;
-        this.utilisateurService = utilisateurService;
-    }
-
-    private String getCurrentUserPrenom() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication != null ? authentication.getName() : "Utilisateur";
-        return utilisateurService.getPrenomByUsername(username);
     }
 
     @GetMapping
     public String list(Model model) {
-        model.addAttribute("username", getCurrentUserPrenom());
+        model.addAttribute("username", SecurityUtils.getCurrentUserPrenom());
         model.addAttribute("entreprises", entrepriseService.getAllEntreprises());
         return "entreprise/list";
     }
 
     @GetMapping("/create")
     public String createForm(Model model) {
-        model.addAttribute("username", getCurrentUserPrenom());
+        model.addAttribute("username", SecurityUtils.getCurrentUserPrenom());
         return "entreprise/create";
     }
 

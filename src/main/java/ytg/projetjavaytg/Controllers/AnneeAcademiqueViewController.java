@@ -1,7 +1,5 @@
 package ytg.projetjavaytg.Controllers;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +7,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ytg.projetjavaytg.Models.Apprenti;
 import ytg.projetjavaytg.Services.AnneeAcademiqueService;
 import ytg.projetjavaytg.Services.ApprentiService;
-import ytg.projetjavaytg.Services.UtilisateurService;
+import ytg.projetjavaytg.Utils.SecurityUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -21,22 +19,16 @@ public class AnneeAcademiqueViewController {
 
     private final ApprentiService apprentiService;
     private final AnneeAcademiqueService anneeAcademiqueService;
-    private final UtilisateurService utilisateurService;
 
-    public AnneeAcademiqueViewController(ApprentiService apprentiService, AnneeAcademiqueService anneeAcademiqueService,
-                                        UtilisateurService utilisateurService) {
+    public AnneeAcademiqueViewController(ApprentiService apprentiService, AnneeAcademiqueService anneeAcademiqueService) {
         this.apprentiService = apprentiService;
         this.anneeAcademiqueService = anneeAcademiqueService;
-        this.utilisateurService = utilisateurService;
     }
 
     @GetMapping
     public String afficherPageAnneeAcademique(Model model) {
         try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String username = authentication.getName();
-            String prenom = utilisateurService.getPrenomByUsername(username);
-            model.addAttribute("username", prenom);
+            model.addAttribute("username", SecurityUtils.getCurrentUserPrenom());
 
             String anneeActuelle = anneeAcademiqueService.getAnneeAcademiqueEnCours();
             model.addAttribute("anneeActuelle", anneeActuelle);

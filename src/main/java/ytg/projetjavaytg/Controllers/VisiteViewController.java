@@ -1,7 +1,5 @@
 package ytg.projetjavaytg.Controllers;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +8,7 @@ import ytg.projetjavaytg.Models.Apprenti;
 import ytg.projetjavaytg.Models.Visite;
 import ytg.projetjavaytg.Services.ApprentiService;
 import ytg.projetjavaytg.Services.VisiteService;
-import ytg.projetjavaytg.Services.UtilisateurService;
+import ytg.projetjavaytg.Utils.SecurityUtils;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -24,18 +22,10 @@ public class VisiteViewController {
 
     private final VisiteService visiteService;
     private final ApprentiService apprentiService;
-    private final UtilisateurService utilisateurService;
 
-    public VisiteViewController(VisiteService visiteService, ApprentiService apprentiService, UtilisateurService utilisateurService) {
+    public VisiteViewController(VisiteService visiteService, ApprentiService apprentiService) {
         this.visiteService = visiteService;
         this.apprentiService = apprentiService;
-        this.utilisateurService = utilisateurService;
-    }
-
-    private String getCurrentUserPrenom() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication != null ? authentication.getName() : "Utilisateur";
-        return utilisateurService.getPrenomByUsername(username);
     }
 
     @GetMapping
@@ -82,7 +72,7 @@ public class VisiteViewController {
         // Préparer label du mois
         String monthLabel = base.getMonth().getDisplayName(TextStyle.FULL, Locale.FRENCH) + " " + base.getYear();
 
-        model.addAttribute("username", getCurrentUserPrenom());
+        model.addAttribute("username", SecurityUtils.getCurrentUserPrenom());
         model.addAttribute("calendar", calendar);
         model.addAttribute("currentMonthLabel", monthLabel);
         model.addAttribute("apprentis", apprentiService.getAllApprentis());

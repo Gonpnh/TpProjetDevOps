@@ -40,7 +40,6 @@ public class Apprenti {
     @Column(name = "majeure", length = 150)
     private String majeure;
 
-    // Par défaut "I1" (pas de @ColumnDefault -> valeur côté Java)
     @Column(name = "niveau", length = 10, nullable = false)
     private String niveau = "I1";
 

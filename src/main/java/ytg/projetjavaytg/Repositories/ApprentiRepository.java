@@ -10,13 +10,8 @@ import java.util.List;
 
 public interface ApprentiRepository extends JpaRepository<Apprenti,Long> {
 
-    List<Apprenti> findByNiveau(String niveau);
-
     List<Apprenti> findByArchiveFalse();
 
-    List<Apprenti> findByNiveauAndArchiveFalse(String niveau);
-
-    // Met à jour le niveau des apprentis avec JPQL
     @Modifying
     @Query("UPDATE Apprenti a SET a.niveau = :nouveauNiveau WHERE a.niveau = :ancienNiveau AND a.archive = false")
     int promouvoirApprentisByNiveau(@Param("ancienNiveau") String ancienNiveau, @Param("nouveauNiveau") String nouveauNiveau);
