@@ -123,12 +123,10 @@ public class ApprentiViewController {
         return "redirect:/dashboard";
     }
 
-    @PostMapping("/{id}/delete")
+    @DeleteMapping("/{id}/delete")
     public String deleteApprenti(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
-            apprentiService.getApprentiById(id).ifPresent(apprenti -> {
-                apprentiService.deleteApprenti(id);
-            });
+            apprentiService.getApprentiById(id).ifPresent(apprenti -> apprentiService.deleteApprenti(id));
             redirectAttributes.addFlashAttribute("success", "L'apprenti a été supprimé avec succès !");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Erreur lors de la suppression : " + e.getMessage());
