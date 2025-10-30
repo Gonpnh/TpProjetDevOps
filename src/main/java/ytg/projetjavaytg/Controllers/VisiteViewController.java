@@ -8,6 +8,7 @@ import ytg.projetjavaytg.Models.Apprenti;
 import ytg.projetjavaytg.Models.Visite;
 import ytg.projetjavaytg.Services.ApprentiService;
 import ytg.projetjavaytg.Services.VisiteService;
+import ytg.projetjavaytg.Utils.SecurityUtils;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -71,6 +72,7 @@ public class VisiteViewController {
         // Préparer label du mois
         String monthLabel = base.getMonth().getDisplayName(TextStyle.FULL, Locale.FRENCH) + " " + base.getYear();
 
+        model.addAttribute("username", SecurityUtils.getCurrentUserPrenom());
         model.addAttribute("calendar", calendar);
         model.addAttribute("currentMonthLabel", monthLabel);
         model.addAttribute("apprentis", apprentiService.getAllApprentis());

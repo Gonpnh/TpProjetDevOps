@@ -18,6 +18,14 @@
     </div>
 
     <div class="container">
+
+        <div th:if="${success}" class="alert-success" style="background-color: #e8f5e9; color: #2e7d32; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #66bb6a;">
+            <span th:text="${success}"></span>
+        </div>
+        <div th:if="${error}" class="alert alert-error" style="background-color: #fef2f2; color: #991b1b; padding: 1rem; border-radius: 0.375rem; margin-bottom: 1.5rem; border: 1px solid #fecaca;">
+            <span th:text="${error}"></span>
+        </div>
+
         <div class="quick-actions">
             <a th:href="@{/entreprises}" class="action-card">
                 <h3>Entreprises</h3>
@@ -30,6 +38,18 @@
             <a th:href="@{/apprentis/create}" class="action-card">
                 <h3>Nouvel apprenti</h3>
                 <p>Ajouter un apprenti</p>
+            </a>
+            <a th:href="@{/apprentis/import}" class="action-card">
+                <h3>Importer apprentis</h3>
+                <p>Importer depuis Excel</p>
+            </a>
+            <a th:href="@{/annee-academique}" class="action-card">
+                <h3>Nouvelle année</h3>
+                <p>Créer une nouvelle année académique</p>
+            </a>
+            <a th:href="@{/recherche}" class="action-card">
+                <h3>Recherche</h3>
+                <p>Rechercher tous les apprentis</p>
             </a>
             <a th:href="@{/visites}" class="action-card">
                 <h3>Visites</h3>
@@ -70,6 +90,9 @@
                             <div class="action-buttons">
                                 <a th:href="@{/apprentis/{id}(id=${apprenti.id})}" class="btn-details">
                                     Voir détails
+                                </a>
+                                <a th:href="@{/apprentis/{id}/edit(id=${apprenti.id})}" class="btn-edit">
+                                    Modifier
                                 </a>
                                 <form th:action="@{/apprentis/{id}/delete(id=${apprenti.id})}" method="post" style="display: inline;">
                                     <button type="submit" class="btn-delete" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet apprenti ?');">

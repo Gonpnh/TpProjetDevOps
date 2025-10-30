@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
 
@@ -14,6 +13,7 @@ import java.time.Instant;
 @Table(name = "apprenti")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Apprenti {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -40,13 +40,11 @@ public class Apprenti {
     @Column(name = "majeure", length = 150)
     private String majeure;
 
-    @ColumnDefault("'I1'")
-    @Column(name = "niveau", length = 10)
-    private String niveau;
+    @Column(name = "niveau", length = 10, nullable = false)
+    private String niveau = "I1";
 
-    @ColumnDefault("0")
-    @Column(name = "archive")
-    private Boolean archive;
+    @Column(name = "archive", nullable = false)
+    private Boolean archive = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "entreprise_id", nullable = false)
@@ -63,31 +61,36 @@ public class Apprenti {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Utilisateur tuteurEnseignant;
 
-    @Lob
-    @Column(name = "mission_mots_cles")
+    @Column(name = "mission_mots_cles", columnDefinition = "TEXT")
     private String missionMotsCles;
 
     @Column(name = "mission_metier_cible", length = 200)
     private String missionMetierCible;
 
-    @Lob
-    @Column(name = "mission_commentaires")
+    @Column(name = "mission_commentaires", columnDefinition = "TEXT")
     private String missionCommentaires;
 
-    @Lob
-    @Column(name = "feedback_tuteur")
+    @Column(name = "feedback_tuteur", columnDefinition = "TEXT")
     private String feedbackTuteur;
 
-    @Lob
-    @Column(name = "remarques_generales")
+    @Column(name = "remarques_generales",columnDefinition = "TEXT")
     private String remarquesGenerales;
 
-    @ColumnDefault("current_timestamp()")
-    @Column(name = "date_creation", nullable = false)
+    @Column(name = "date_creation", nullable = false, updatable = false)
     private Instant dateCreation;
 
-    @ColumnDefault("current_timestamp()")
     @Column(name = "date_modification", nullable = false)
     private Instant dateModification;
 
+    @PrePersist
+    void prePersist() {
+        Instant now = Instant.now();
+        this.dateCreation = now;
+        this.dateModification = now;
+    }
+
+    @PreUpdate
+    void preUpdate() {
+        this.dateModification = Instant.now();
+    }
 }

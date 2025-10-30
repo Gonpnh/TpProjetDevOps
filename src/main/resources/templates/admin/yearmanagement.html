@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Année Académique - ASTA</title>
+    <link rel="stylesheet" th:href="@{/css/year-management.css}">
+</head>
+<body>
+    <div class="header">
+        <h1>ASTA - Gestion Année Académique</h1>
+        <div class="user-info">
+            <span>Bonjour, <strong th:text="${username}">Utilisateur</strong></span>
+            <a th:href="@{/dashboard}" class="back-btn">← Retour au tableau de bord</a>
+            <form th:action="@{/logout}" method="post" style="margin: 0;">
+                <button type="submit" class="logout-btn">Déconnexion</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Créer une nouvelle année académique</h2>
+            <p class="subtitle">Cette action va promouvoir les apprentis et archiver les I3</p>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success">
+            <span th:text="${success}"></span>
+        </div>
+        <div th:if="${error}" class="alert alert-error">
+            <span th:text="${error}"></span>
+        </div>
+
+        <div class="stats-container">
+            <h3>Situation actuelle</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" th:text="${nbI1}">0</div>
+                    <div class="stat-label">Apprentis I1</div>
+                    <div class="stat-info">→ Seront promus en I2</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" th:text="${nbI2}">0</div>
+                    <div class="stat-label">Apprentis I2</div>
+                    <div class="stat-info">→ Seront promus en I3</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" th:text="${nbI3}">0</div>
+                    <div class="stat-label">Apprentis I3</div>
+                    <div class="stat-info">→ Seront archivés</div>
+                </div>
+                <div class="stat-card total">
+                    <div class="stat-number" th:text="${totalApprentis}">0</div>
+                    <div class="stat-label">Total apprentis actifs</div>
+                </div>
+            </div>
+            <div th:if="${anneeActuelle != null && anneeActuelle != ''}" class="current-year">
+                <strong>Année académique actuelle :</strong> <span th:text="${anneeActuelle}">2024-2025</span>
+            </div>
+        </div>
+
+        <div class="form-container primary-action">
+            <h3>Créer la nouvelle année automatiquement</h3>
+            <p class="description">Cliquez sur le bouton ci-dessous pour passer automatiquement à l'année suivante</p>
+
+            <div th:if="${anneeActuelle != null && anneeActuelle != ''}" class="next-year-info">
+                <span class="current">Année actuelle : <strong th:text="${anneeActuelle}">2025-2026</strong></span>
+                <span class="arrow">→</span>
+                <span class="next">Nouvelle année : <strong th:text="${anneeActuelle != '' ? (T(java.lang.Integer).parseInt(anneeActuelle.split('-')[0]) + 1) + '-' + (T(java.lang.Integer).parseInt(anneeActuelle.split('-')[1]) + 1) : ''}">2026-2027</strong></span>
+            </div>
+
+            <div class="warning-box">
+                <strong>Attention !</strong>
+                <p>Cette action est irréversible et va :</p>
+                <ul>
+                    <li>Archiver tous les apprentis de niveau I3</li>
+                    <li>Promouvoir les I2 en I3</li>
+                    <li>Promouvoir les I1 en I2</li>
+                    <li>Mettre à jour l'année académique de tous les apprentis actifs</li>
+                </ul>
+            </div>
+
+            <form th:action="@{/annee-academique/creer-suivante}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir créer la nouvelle année académique ? Cette action est irréversible.');">
+                <button type="submit" class="btn-create-auto">
+                    <span class="text">Créer la nouvelle année académique</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+

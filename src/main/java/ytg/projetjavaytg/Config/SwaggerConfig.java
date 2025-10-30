@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SwaggerConfig {
+
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
@@ -19,11 +20,19 @@ public class SwaggerConfig {
     }
 
     @Bean
-    public GroupedOpenApi publicApi() {
+    public GroupedOpenApi restApiGroup() {
         return GroupedOpenApi.builder()
-                .group("api")
+                .group("REST API")
                 .pathsToMatch("/api/**")
                 .build();
     }
-}
 
+    @Bean
+    public GroupedOpenApi mvcGroup() {
+        return GroupedOpenApi.builder()
+                .group("MVC Controllers")
+                .pathsToExclude("/api/**")
+                .packagesToScan("ytg.projetjavaytg.Controllers")
+                .build();
+    }
+}

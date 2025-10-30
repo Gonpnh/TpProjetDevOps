@@ -1,5 +1,11 @@
 package ytg.projetjavaytg.Controllers;
 
+/*
+ * Contrôleur d'inscription désactivé
+ * La fonctionnalité d'inscription a été retirée du projet
+ */
+
+/*
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,3 +38,4 @@ public class RegisterController {
         }
     }
 }
+*/

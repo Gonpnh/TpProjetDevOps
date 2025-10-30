@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Évaluation - ASTA</title>
+    <link rel="stylesheet" th:href="@{/css/evaluation-form.css}">
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>ASTA - Evaluation</h1>
+        <div class="user-info">
+            <span>Bonjour, <strong th:text="${username}">Utilisateur</strong></span>
+            <a th:href="@{/dashboard}" class="back-btn">← Retour au tableau de bord</a>
+            <form th:action="@{/logout}" method="post" style="margin: 0;">
+                <button type="submit" class="logout-btn">Déconnexion</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="evaluation-container">
+        <!-- En-tête avec informations apprenti -->
+        <div class="evaluation-header">
+            <h1>Évaluation de l'apprenti</h1>
+            <p><strong>Nom :</strong> <span th:text="${apprenti.nom}"></span> <span th:text="${apprenti.prenom}"></span></p>
+            <p><strong>Programme :</strong> <span th:text="${apprenti.programme}"></span> - <span th:text="${apprenti.majeure}"></span></p>
+            <p><strong>Année académique :</strong> <span th:text="${apprenti.anneeAcademique}"></span> (<span th:text="${apprenti.niveau}"></span>)</p>
+            <p><strong>Entreprise :</strong> <span th:text="${apprenti.entreprise?.raisonSociale ?: 'Non renseignée'}"></span></p>
+        </div>
+
+        <!-- Messages flash -->
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        <div th:if="${visiteInfo}" class="alert alert-info" th:text="${visiteInfo}"></div>
+
+        <!-- Formulaire d'évaluation -->
+        <form th:action="@{/evaluation/save}" method="post" class="evaluation-form" th:object="${evaluation}">
+            <input type="hidden" name="apprentiId" th:value="${apprenti.id}">
+            <input type="hidden" name="evaluationId" th:value="${evaluation.id}">
+
+            <!-- Section: Informations Mission -->
+            <div class="form-section">
+                <h2>Informations Mission</h2>
+                <div class="info-box">
+                    <p><strong>Mots-clés :</strong> <span th:text="${apprenti.missionMotsCles ?: 'Non renseignés'}"></span></p>
+                    <p><strong>Métier cible :</strong> <span th:text="${apprenti.missionMetierCible ?: 'Non renseigné'}"></span></p>
+                    <p><strong>Commentaires mission :</strong> <span th:text="${apprenti.missionCommentaires ?: 'Aucun'}"></span></p>
+                </div>
+            </div>
+
+            <!-- Section: Mémoire / Rapport -->
+            <div class="form-section">
+                <h2>Mémoire / Rapport</h2>
+
+                <div class="form-group">
+                    <label for="memoireTheme">
+                        Thème / Sujet <span class="required">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        id="memoireTheme"
+                        name="memoireTheme"
+                        class="form-control"
+                        th:value="${evaluation.memoireTheme}"
+                        required
+                        placeholder="Ex: Mise en place d'une architecture microservices">
+                    <span class="helper-text">Titre ou thème principal du mémoire/rapport</span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="memoireNote">
+                            Note finale (sur 20)
+                        </label>
+                        <input
+                            type="number"
+                            id="memoireNote"
+                            name="memoireNote"
+                            class="form-control note-input"
+                            th:value="${evaluation.memoireNote}"
+                            step="0.01"
+                            min="0"
+                            max="20"
+                            placeholder="Ex: 15.50">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="memoireCommentaires">
+                        Commentaires
+                    </label>
+                    <textarea
+                        id="memoireCommentaires"
+                        name="memoireCommentaires"
+                        class="form-control"
+                        th:text="${evaluation.memoireCommentaires}"
+                        placeholder="Vos commentaires sur le mémoire/rapport : points forts, axes d'amélioration, remarques générales..."></textarea>
+                    <span class="helper-text">Évaluation qualitative du travail écrit</span>
+                </div>
+            </div>
+
+            <!-- Section: Soutenance -->
+            <div class="form-section">
+                <h2>Soutenance</h2>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="soutenanceDate">
+                            Date de soutenance
+                        </label>
+                        <input
+                            type="date"
+                            id="soutenanceDate"
+                            name="soutenanceDate"
+                            class="form-control date-input"
+                            th:value="${evaluation.soutenanceDate}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="soutenanceNote">
+                            Note finale (sur 20)
+                        </label>
+                        <input
+                            type="number"
+                            id="soutenanceNote"
+                            name="soutenanceNote"
+                            class="form-control note-input"
+                            th:value="${evaluation.soutenanceNote}"
+                            step="0.01"
+                            min="0"
+                            max="20"
+                            placeholder="Ex: 16.00">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="soutenanceCommentaires">
+                        Commentaires
+                    </label>
+                    <textarea
+                        id="soutenanceCommentaires"
+                        name="soutenanceCommentaires"
+                        class="form-control"
+                        th:text="${evaluation.soutenanceCommentaires}"
+                        placeholder="Commentaires sur la soutenance : qualité de la présentation, réponses aux questions, maîtrise du sujet..."></textarea>
+                    <span class="helper-text">Évaluation de la présentation orale</span>
+                </div>
+            </div>
+
+            <!-- Section: Remarques et Feedback -->
+            <div class="form-section">
+                <h2>Remarques et Feedback</h2>
+
+                <h3>Remarques générales (Évaluation)</h3>
+                <div class="form-group">
+                    <label for="remarquesGenerales">
+                        Commentaires libres sur l'évaluation globale
+                    </label>
+                    <textarea
+                        id="remarquesGenerales"
+                        name="remarquesGenerales"
+                        class="form-control"
+                        th:text="${evaluation.remarquesGenerales}"
+                        placeholder="Remarques générales, appréciation globale, conseils pour la suite..."></textarea>
+                    <span class="helper-text">Vue d'ensemble sur le parcours académique de l'apprenti</span>
+                </div>
+
+                <h3>Feedback du Tuteur-Enseignant</h3>
+                <div class="info-box">
+                    <p><strong>Feedback actuel :</strong></p>
+                    <p th:text="${apprenti.feedbackTuteur ?: 'Aucun feedback enregistré'}"></p>
+                    <p style="margin-top: 10px;"><em>Note : Le feedback tuteur se modifie depuis la page de détails de l'apprenti</em></p>
+                </div>
+
+                <div class="info-box" th:if="${apprenti.remarquesGenerales}">
+                    <p><strong>Remarques générales sur l'apprenti :</strong></p>
+                    <p th:text="${apprenti.remarquesGenerales}"></p>
+                </div>
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="action-buttons">
+                <a th:href="@{/apprentis/{id}(id=${apprenti.id})}" class="btn btn-secondary">
+                    ← Retour aux détails
+                </a>
+
+                <button type="submit" class="btn btn-primary" th:text="${isNew ? 'Créer l''évaluation' : 'Mettre à jour l''évaluation'}">
+                    Enregistrer
+                </button>
+
+                <a th:if="${!isNew}"
+                   th:href="@{/evaluation/download/{id}(id=${apprenti.id})}"
+                   class="btn btn-pdf"
+                   target="_blank">
+                    Télécharger le bulletin PDF
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Validation des notes
+        document.querySelectorAll('.note-input').forEach(input => {
+            input.addEventListener('change', function() {
+                const value = parseFloat(this.value);
+                if (value < 0) {
+                    this.value = 0;
+                    alert('La note ne peut pas être négative');
+                } else if (value > 20) {
+                    this.value = 20;
+                    alert('La note ne peut pas dépasser 20');
+                }
+            });
+        });
+
+        // Auto-hide alerts après 5 secondes
+        setTimeout(() => {
+            document.querySelectorAll('.alert').forEach(alert => {
+                alert.style.transition = 'opacity 0.5s';
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 500);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>
+

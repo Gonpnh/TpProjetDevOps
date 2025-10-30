@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importer des apprentis - ASTA</title>
+    <link rel="stylesheet" th:href="@{/css/create-apprentice.css}">
+    <link rel="stylesheet" th:href="@{/css/import-apprentice.css}">
+</head>
+<body>
+    <div class="header">
+        <h1>ASTA - Apprentis</h1>
+        <div class="user-info">
+            <span>Bonjour, <strong th:text="${username}">Utilisateur</strong></span>
+            <a th:href="@{/dashboard}" class="back-btn">← Retour au tableau de bord</a>
+            <form th:action="@{/logout}" method="post" style="margin: 0;">
+                <button type="submit" class="logout-btn">Déconnexion</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Importer des apprentis depuis Excel</h2>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success">
+            <span th:text="${success}"></span>
+        </div>
+        <div th:if="${error}" class="alert alert-error">
+            <span th:utext="${error}"></span>
+        </div>
+        <div th:if="${warning}" class="alert alert-warning">
+            <span th:utext="${warning}"></span>
+        </div>
+
+        <div class="form-card">
+            <div class="section">
+                <h3>Instructions pour l'import</h3>
+                <p>Le fichier Excel doit contenir les colonnes suivantes (respecter exactement ces noms) :</p>
+
+                <div class="instructions-grid">
+                    <div class="required-columns">
+                        <h4>Colonnes obligatoires :</h4>
+                        <ul>
+                            <li><strong>nom</strong> - Nom de l'apprenti</li>
+                            <li><strong>prenom</strong> - Prénom de l'apprenti</li>
+                            <li><strong>email</strong> - Adresse email (doit être unique)</li>
+                            <li><strong>entreprise</strong> - Raison sociale de l'entreprise (doit exister)</li>
+                            <li><strong>maitre_apprentissage</strong> - Nom complet du maître d'apprentissage (doit exister)</li>
+                            <li><strong>tuteur_enseignant</strong> - Nom complet du tuteur enseignant (doit exister)</li>
+                        </ul>
+                    </div>
+
+                    <div class="optional-columns">
+                        <h4>Colonnes optionnelles :</h4>
+                        <ul>
+                            <li><strong>telephone</strong> - Numéro de téléphone</li>
+                            <li><strong>programme</strong> - Programme d'études</li>
+                            <li><strong>majeure</strong> - Majeure</li>
+                            <li><strong>niveau</strong> - Niveau (par défaut : I1)</li>
+                            <li><strong>annee_academique</strong> - Année académique (par défaut : année en cours)</li>
+                            <li><strong>mission_mots_cles</strong> - Mots-clés de la mission</li>
+                            <li><strong>mission_metier_cible</strong> - Métier cible de la mission</li>
+                            <li><strong>mission_commentaires</strong> - Commentaires sur la mission</li>
+                            <li><strong>remarques_generales</strong> - Remarques générales</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="important-notes">
+                    <h4>Notes importantes :</h4>
+                    <ul>
+                        <li>Le fichier doit être au format Excel (.xlsx)</li>
+                        <li>La première ligne doit contenir les en-têtes</li>
+                        <li>Les entreprises, maîtres d'apprentissage et tuteurs doivent déjà exister dans le système</li>
+                        <li>Les emails doivent être uniques</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Sélectionner le fichier</h3>
+                <form th:action="@{/apprentis/import}" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="file">Fichier Excel (.xlsx) :</label>
+                        <input type="file" id="file" name="file" accept=".xlsx" required>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Importer</button>
+                        <a href="/dashboard" class="btn btn-secondary">Annuler</a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="section">
+                <h3>Télécharger un modèle</h3>
+                <p>Vous pouvez télécharger un fichier modèle avec les en-têtes pré-remplies :</p>
+                <div class="form-actions">
+                    <a href="/apprentis/template" class="btn btn-outline">Télécharger le modèle vide</a>
+                    <a href="/apprentis/exemple" class="btn btn-outline">Télécharger avec exemples</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

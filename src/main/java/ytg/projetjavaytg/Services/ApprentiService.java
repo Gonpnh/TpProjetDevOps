@@ -14,12 +14,13 @@ import java.util.Optional;
 public class ApprentiService {
 
     private final ApprentiRepository apprentiRepository;
+    private final AnneeAcademiqueService anneeAcademiqueService;
 
-    public ApprentiService(ApprentiRepository apprentiRepository) {
+    public ApprentiService(ApprentiRepository apprentiRepository,
+                          AnneeAcademiqueService anneeAcademiqueService) {
         this.apprentiRepository = apprentiRepository;
+        this.anneeAcademiqueService = anneeAcademiqueService;
     }
-
-    // mettre @Transactional sur les methodes qui modifient la base de données
 
     public List<Apprenti> getAllApprentis() {
         List<Apprenti> apprentis = apprentiRepository.findAll();
@@ -47,6 +48,10 @@ public class ApprentiService {
         if (apprenti.getNiveau() == null) {
             apprenti.setNiveau("I1"); // valeur par defaut en base
         }
+        if (apprenti.getAnneeAcademique() == null || apprenti.getAnneeAcademique().isEmpty()) {
+            String anneeEnCours = anneeAcademiqueService.getAnneeAcademiqueEnCours();
+            apprenti.setAnneeAcademique(anneeEnCours);
+        }
         return apprentiRepository.save(apprenti);
     }
 
@@ -63,5 +68,47 @@ public class ApprentiService {
             throw new ResourceNotFoundException("Aucun apprenti trouvé dans l'entreprise " + raisonSociale);
         }
         return apprentis;
+    public List<Apprenti> getApprentisNonArchives() {
+        return apprentiRepository.findByArchiveFalse();
+    }
+
+    @Transactional
+    public void creerNouvelleAnneeAcademique(String nouvelleAnnee) {
+        anneeAcademiqueService.creerEtActiverAnnee(nouvelleAnnee);
+        apprentiRepository.archiverApprentisI3();
+        apprentiRepository.promouvoirApprentisByNiveau("I2", "I3");
+        apprentiRepository.promouvoirApprentisByNiveau("I1", "I2");
+        List<Apprenti> apprentisActifs = apprentiRepository.findByArchiveFalse();
+        for (Apprenti apprenti : apprentisActifs) {
+            apprenti.setAnneeAcademique(nouvelleAnnee);
+            apprenti.setDateModification(Instant.now());
+            apprentiRepository.save(apprenti);
+        }
+    }
+
+    @Transactional
+    public Apprenti updateApprenti(Long id, Apprenti apprentiDetails) {
+        Optional<Apprenti> apprentiOpt = apprentiRepository.findById(id);
+        if (apprentiOpt.isPresent()) {
+            Apprenti apprenti = apprentiOpt.get();
+            apprenti.setNom(apprentiDetails.getNom());
+            apprenti.setPrenom(apprentiDetails.getPrenom());
+            apprenti.setEmail(apprentiDetails.getEmail());
+            apprenti.setTelephone(apprentiDetails.getTelephone());
+            apprenti.setProgramme(apprentiDetails.getProgramme());
+            apprenti.setAnneeAcademique(apprentiDetails.getAnneeAcademique());
+            apprenti.setMajeure(apprentiDetails.getMajeure());
+            apprenti.setNiveau(apprentiDetails.getNiveau());
+            apprenti.setEntreprise(apprentiDetails.getEntreprise());
+            apprenti.setMaitreApprentissage(apprentiDetails.getMaitreApprentissage());
+            apprenti.setMissionMotsCles(apprentiDetails.getMissionMotsCles());
+            apprenti.setMissionMetierCible(apprentiDetails.getMissionMetierCible());
+            apprenti.setMissionCommentaires(apprentiDetails.getMissionCommentaires());
+            apprenti.setFeedbackTuteur(apprentiDetails.getFeedbackTuteur());
+            apprenti.setRemarquesGenerales(apprentiDetails.getRemarquesGenerales());
+            apprenti.setDateModification(Instant.now());
+            return apprentiRepository.save(apprenti);
+        }
+        return null;
     }
 }

@@ -8,6 +8,22 @@ DROP TABLE IF EXISTS apprenti;
 DROP TABLE IF EXISTS maitre_apprentissage;
 DROP TABLE IF EXISTS entreprise;
 DROP TABLE IF EXISTS utilisateur;
+DROP TABLE IF EXISTS annee_academique;
+
+-- =============================================
+-- Table : annee_academique
+-- Stocke l'année académique en cours
+-- =============================================
+CREATE TABLE annee_academique (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    annee VARCHAR(20) NOT NULL UNIQUE COMMENT 'Format: 2025-2026',
+    active BOOLEAN DEFAULT FALSE COMMENT 'Une seule année peut être active',
+    date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    date_activation TIMESTAMP NULL COMMENT 'Date à laquelle cette année a été activée'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Index pour améliorer la recherche de l'année active
+CREATE INDEX idx_annee_active ON annee_academique(active);
 
 -- =============================================
 -- Table : utilisateur (tuteur-enseignant)
