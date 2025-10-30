@@ -12,6 +12,29 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    # Provision d'un service PostgreSQL 17 pour les tests
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready -U postgres -d testdb
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    # Variables d'environnement pour Spring Boot afin d'utiliser PostgreSQL
+    env:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/testdb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
     steps:
       # 1️⃣ Checkout du code
       - uses: actions/checkout@v4
