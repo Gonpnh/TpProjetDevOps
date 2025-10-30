@@ -5,6 +5,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ytg.projetjavaytg.Models.Apprenti;
+import ytg.projetjavaytg.Repositories.EvaluationRepository;
+import ytg.projetjavaytg.Repositories.VisiteRepository;
 import ytg.projetjavaytg.Services.*;
 import ytg.projetjavaytg.Utils.SecurityUtils;
 
@@ -18,19 +20,23 @@ public class ApprentiViewController {
     private final UtilisateurService utilisateurService;
     private final AnneeAcademiqueService anneeAcademiqueService;
     private final EvaluationService evaluationService;
+    private final EvaluationRepository evaluationRepository;
+    private final VisiteRepository visiteRepository;
 
     public ApprentiViewController(ApprentiService apprentiService,
                                   EntrepriseService entrepriseService,
                                   MaitreApprentissageService maitreApprentissageService,
                                   UtilisateurService utilisateurService,
                                   AnneeAcademiqueService anneeAcademiqueService,
-                                  EvaluationService evaluationService) {
+                                  EvaluationService evaluationService, EvaluationRepository evaluationRepository, VisiteRepository visiteRepository) {
         this.apprentiService = apprentiService;
         this.entrepriseService = entrepriseService;
         this.maitreApprentissageService = maitreApprentissageService;
         this.utilisateurService = utilisateurService;
         this.anneeAcademiqueService = anneeAcademiqueService;
         this.evaluationService = evaluationService;
+        this.evaluationRepository = evaluationRepository;
+        this.visiteRepository = visiteRepository;
     }
 
     @GetMapping("/create")
@@ -126,6 +132,8 @@ public class ApprentiViewController {
     @DeleteMapping("/{id}/delete")
     public String deleteApprenti(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
+            evaluationRepository.deleteByApprentiId(id);
+            visiteRepository.deleteByApprentiId(id);
             apprentiService.getApprentiById(id).ifPresent(apprenti -> apprentiService.deleteApprenti(id));
             redirectAttributes.addFlashAttribute("success", "L'apprenti a été supprimé avec succès !");
         } catch (Exception e) {

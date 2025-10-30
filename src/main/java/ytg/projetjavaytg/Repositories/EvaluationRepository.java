@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface EvaluationRepository extends JpaRepository<Evaluation,Long> {
     Optional<Evaluation> findByApprentiId(Long apprentiId);
+    Optional<Void> deleteByApprentiId(Long apprentiId);
 }
