@@ -1,11 +1,11 @@
 package ytg.projetjavaytg.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     private ApiError buildApiError(HttpStatus status, String message) {
         ApiError apiError = new ApiError();
@@ -48,26 +50,30 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({HttpMessageNotReadableException.class, MissingServletRequestParameterException.class, HttpRequestMethodNotSupportedException.class})
-    public ResponseEntity<ApiError> handleBadRequests(Exception ex) {
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiError> handleBadRequests(HttpMessageNotReadableException ex) {
+        logger.warn("HttpMessageNotReadable: {}", ex.getMessage());
         ApiError apiError = buildApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiError> handleDataIntegrity(DataIntegrityViolationException ex) {
+        logger.warn("DataIntegrityViolation: {}", ex.getMessage(), ex);
         ApiError apiError = buildApiError(HttpStatus.CONFLICT, "Contrainte d'intégrité non respecté");
         return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiError> handleAccessDenied(AccessDeniedException ex) {
+        logger.warn("AccessDenied: {}", ex.getMessage(), ex);
         ApiError apiError = buildApiError(HttpStatus.FORBIDDEN, "Access refusé");
         return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiError> handleAll(Exception ex) {
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ApiError> handleAll(RuntimeException ex) {
+        logger.error("Unhandled exception", ex);
         ApiError apiError = buildApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Erreur Serveur");
         return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
