@@ -59,7 +59,11 @@ Ce document sert de trame pour remplir le rapport demandé (sections 3.1 à 3.4 
 - - Configuration de la navigation entre les différentes pages et gestion des liens et redirections dans l’interface utilisateur.
 - - Déploiement complet de l’application sur Render.com, incluant la configuration du serveur, de la base de données et la mise en ligne du projet.
 - - Contribution à la mise en forme du site avec le CSS pour améliorer l’ergonomie et l’esthétique des pages.
-- Membre 3 (Terence) : [À REMPLIR] — tâches réalisées
+- Membre 3 (Terence) :
+- - Création d'un workflow github pour vérifier que l'application ce build correctement à chaque commit
+- - Réalisation des controller qui gèrent les API REST pour les entités principales (Apprenti, Evaluation, etc.).
+- - Implémentation des services qui contiennent la logique métier pour les différentes entités.
+- - Requête personnalisée avec SQL et JPQL pour filtrer le résultat
 
 ### d) Trois points retenus du cours / projet
 1. Mise en œuvre du pattern MVC avec SpringBoot et Thymeleaf, avec la séparation de la logique métier, la gestion des interactions avec les controllers et l'affichage dynamique avec les view donc Thymeleaf.
@@ -75,33 +79,20 @@ Ce document sert de trame pour remplir le rapport demandé (sections 3.1 à 3.4 
 - Open/Closed : Respecté — justification : Nous avons structuré le projet de façon à pouvoir ajouter facilement de nouvelles pages ou fonctionnalités (comme le calendrier ou l’évaluation) sans modifier les classes existantes.
 - Liskov Substitution : Respecté — justification : Nous avons utilisé des interfaces génériques Spring comme JpaRepository qui permettent à nos repositories (ApprentiRepository, EvaluationRepository, etc.) d’hériter d’un comportement standard et interchangeable.
 - Interface Segregation : Respecté — justification : Chaque interface de repository est spécialisée pour une entité donnée : par exemple, ApprentiRepository gère uniquement les apprentis et EvaluationRepository uniquement les évaluations.
-- Dependency Inversion : Respecté — justification : Nous avons mis en œuvre l’injection de dépendances pour découpler les classes :Les services comme ApprentiService utilisent @Autowired pour recevoir automatiquement un ApprentiRepository. Les controllers comme ApprentiViewController injectent à leur tour ApprentiService sans jamais créer d’instance manuellement (new). Et enfin les annotations @Service et @Repository indiquent à Spring Boot de gérer lui-même les dépendances.
+- Dependency Inversion : Respecté — justification : Nous avons mis en œuvre l’injection de dépendances pour découpler les classes :Les services comme ApprentiService l'utilisent pour recevoir automatiquement un ApprentiRepository. Les controllers comme ApprentiViewController injectent à leur tour ApprentiService sans jamais créer d’instance manuellement (new). Et enfin les annotations @Service et @Repository indiquent à Spring Boot de gérer lui-même les dépendances.
 
 ---
 
 ## B. Utilisation d'une requête SQL standard (unique)
 
-> Indique ici la requête SQL standard (exécutée une seule fois) que tu as utilisée dans le projet, puis fournis une analyse critique de cette approche.
-
-### Requête SQL utilisée (une seule) :
-
-```
--- Exemple à remplacer par la vraie requête
-SELECT * FROM entreprise WHERE raison_sociale ILIKE '%Exemple%';
-```
-
-*(Remplace l'exemple ci-dessus par la requête SQL exacte que vous avez utilisée — assurez-vous de n'en lister qu'une seule.)*
-
 ### Analyse critique de l'utilisation d'une requête SQL native (une seule fois)
 
-- Objectif de l'utilisation de SQL natif : [À REMPLIR]
-- Avantages constatés (performance, flexibilité, accès à des fonctions DB) :
-    - [À REMPLIR]
+- Objectif de l'utilisation de SQL natif : 
+- - Permettre de faire des requêtes personnalisées pour pouvoir avoir des résultats plus précis et ne pas avoir à trier les résultats dans le front
 - Inconvénients / risques (portabilité, sécurité, perte d'abstraction, maintenance) :
-    - [À REMPLIR]
+    - ne s'adapte pas automatiquement aux changements de schéma de la base de données et au SGBD
 - Alternatives possibles (JPQL, Spring Data derived queries, Criteria API) :
-    - [À REMPLIR]
-- Conclusion et justification du choix : [À REMPLIR]
+    - JPQL : Permet de faire des requêtes en utilisant les entités et leurs relations, ce qui est plus portable et maintenable.
 
 ---
 
