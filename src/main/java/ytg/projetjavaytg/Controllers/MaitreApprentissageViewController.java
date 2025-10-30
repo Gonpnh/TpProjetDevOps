@@ -52,12 +52,10 @@ public class MaitreApprentissageViewController {
         }
     }
 
-    @PostMapping("/{id}/delete")
+    @DeleteMapping("/{id}")
     public String deleteMaitre(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
-            maitreApprentissageService.getMaitreApprentissageById(id).ifPresent(maitre -> {
-                maitreApprentissageService.deleteMaitreApprentissage(id);
-            });
+            maitreApprentissageService.getMaitreApprentissageById(id).ifPresent(maitre -> maitreApprentissageService.deleteMaitreApprentissage(id));
             redirectAttributes.addFlashAttribute("success", "Le maître d'apprentissage a été supprimé avec succès !");
         } catch (DataIntegrityViolationException e) {
             redirectAttributes.addFlashAttribute("error", "Impossible de supprimer ce maître d'apprentissage. Il est associé à un ou plusieurs apprentis. Veuillez d'abord modifier ou supprimer ces apprentis.");

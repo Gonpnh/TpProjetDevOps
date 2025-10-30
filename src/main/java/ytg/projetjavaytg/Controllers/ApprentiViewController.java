@@ -126,7 +126,6 @@ public class ApprentiViewController {
     @DeleteMapping("/{id}")
     public String deleteApprenti(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
-            // Le service supprime les entités dépendantes dans une transaction
             apprentiService.deleteApprenti(id);
             redirectAttributes.addFlashAttribute("success", "L'apprenti a été supprimé avec succès !");
         } catch (Exception e) {

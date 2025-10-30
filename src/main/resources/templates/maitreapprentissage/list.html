@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,7 +58,7 @@
                         <td th:text="${maitre.telephone ?: 'Non renseigné'}">0612345678</td>
                         <td th:text="${maitre.poste ?: 'Non renseigné'}">Manager</td>
                         <td>
-                            <form th:action="@{/maitres/{id}/delete(id=${maitre.id})}" method="post" style="display: inline;">
+                            <form th:action="@{/maitres/{id}(id=${maitre.id})}" th:method="delete" style="display: inline;">
                                 <button type="submit" class="btn-delete" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce maître d\'apprentissage ?');">
                                     Supprimer
                                 </button>
