@@ -52,7 +52,7 @@ public class MaitreApprentissageViewController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @PostMapping("/{id}/delete")
     public String deleteMaitre(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             maitreApprentissageService.getMaitreApprentissageById(id).ifPresent(maitre -> maitreApprentissageService.deleteMaitreApprentissage(id));
