@@ -25,26 +25,30 @@ Ce document sert de trame pour remplir le rapport demandé (sections 3.1 à 3.4 
 ## 3.3 Instructions pour lancer et tester l'application (en local)
 
 - Prérequis :
-    - Java JDK version : 17
+  - Java JDK version : 17
 - Variables d'environnement (exemples à voir dans .env.example) :
-    - SPRING_DATASOURCE_URL = jdbc:postgresql://localhost:5432/asta
-    - SPRING_DATASOURCE_USERNAME = postgres
-    - SPRING_DATASOURCE_PASSWORD = password
+  - SPRING_DATASOURCE_URL = jdbc:postgresql://localhost:5432/asta
+  - SPRING_DATASOURCE_USERNAME = postgres
+  - SPRING_DATASOURCE_PASSWORD = password
 
 - URL utiles après démarrage :
-    - Application web (Thymeleaf) : http://localhost:8080/
-    - Swagger / OpenAPI UI : http://localhost:8080/swagger-ui/index.html (ou /swagger-ui.html)
+  - Application web (Thymeleaf) : http://localhost:8080/
+  - Swagger / OpenAPI UI : http://localhost:8080/swagger-ui/index.html (ou /swagger-ui.html)
+  - - À noter : Sur Swagger, vous trouverez deux définitions d'API (en haut à droite) : une pour l'API REST et l'autre pour les controllers Thymeleaf (ViewControllers).
 
 ---
 
 ## 3.4 Retour d'expérience et métadonnées
 
 ### a) Aspects à signaler au correcteur
-- [À REMPLIR] : Indiquer ici l'aspect technique, fonctionnel ou pédagogique sur lequel tu souhaites attirer l'attention (ex. intégration Spring Security, architecture MVC, tests, gestion des migrations, etc.).
+- Intégration de Spring Security pour la gestion des utilisateurs, des rôles et la sécurisation des endpoints.
+- Utilisation de Flyway pour la gestion des migrations de la base de données.
+- Intégration de l'ajout de données via un fichier CSV pour les apprentis avec analyse complète des erreurs (mauvaise saisie des noms...).
+- Ajout d'une option permettant de télécharger les évaluations au format PDF (Etudiant > Voir détails > Evaluer l'étudiant > Télécharger le bulletin PDF).
 
 ### b) Plus grande difficulté rencontrée
-- Description de la difficulté : [À REMPLIR]
-- Comment elle a été gérée / solutionnée / contournée : [À REMPLIR]
+- Description de la difficulté : Intégration de Spring Security
+- Comment elle a été gérée / solutionnée / contournée : Gros travail de documentation et de tests pour comprendre le fonctionnement de Spring Security, la configuration, la filter chain...
 
 ### c) Contribution de chaque membre de l'équipe
 - Membre 1 (Yassine) :
@@ -71,8 +75,7 @@ Ce document sert de trame pour remplir le rapport demandé (sections 3.1 à 3.4 
 3. La gestion des dépendances avec Maven qui a permis de centraliser la librairie du projet dans le fichier pom.xml et qui a permis de faciliter la maintenance et aussi le déploiement sur render.com.
 
 ### e) Fonctionnalités non implémentées et raisons
-- Fonctionnalité 1 : [À REMPLIR] — raison : [À REMPLIR]
-- Fonctionnalité 2 : [À REMPLIR] — raison : [À REMPLIR]
+- Aucune fonctionnalité obligatoire n'a été délaissée ou non implémentée.
 
 ### f) Respect des principes SOLID
 - Single Responsibility : Respecté — justification : Nous avons veillé à bien séparer les responsabilités entre les différentes couches : les controllers (comme ApprentiViewController ou EvaluationViewController) gèrent les requêtes et les vues, les services (comme ApprentiService) contiennent la logique métier, et les repositories (comme ApprentiRepository) accèdent aux données.
@@ -87,19 +90,19 @@ Ce document sert de trame pour remplir le rapport demandé (sections 3.1 à 3.4 
 
 ### Analyse critique de l'utilisation d'une requête SQL native (une seule fois)
 
-- Objectif de l'utilisation de SQL natif : 
+- Objectif de l'utilisation de SQL natif :
 - - Permettre de faire des requêtes personnalisées pour pouvoir avoir des résultats plus précis et ne pas avoir à trier les résultats dans le front
 - Inconvénients / risques (portabilité, sécurité, perte d'abstraction, maintenance) :
-    - ne s'adapte pas automatiquement aux changements de schéma de la base de données et au SGBD
+  - ne s'adapte pas automatiquement aux changements de schéma de la base de données et au SGBD
 - Alternatives possibles (JPQL, Spring Data derived queries, Criteria API) :
-    - JPQL : Permet de faire des requêtes en utilisant les entités et leurs relations, ce qui est plus portable et maintenable.
+  - JPQL : Permet de faire des requêtes en utilisant les entités et leurs relations, ce qui est plus portable et maintenable.
 
 ---
 
 ## Annexes
 
 - Fichiers importants à consulter :
-    - `src/main/resources/application.properties`
-    - `src/main/resources/db/migration` (Flyway SQLs)
+  - `src/main/resources/application.properties`
+  - `src/main/resources/db/migration` (Flyway SQLs)
 
 ---
