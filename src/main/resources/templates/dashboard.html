@@ -94,8 +94,7 @@
                                 <a th:href="@{/apprentis/{id}/edit(id=${apprenti.id})}" class="btn-edit">
                                     Modifier
                                 </a>
-                                <form th:action="@{/apprentis/{id}/delete(id=${apprenti.id})}" th:method="delete" style="display: inline;">
-                                    <!--TODO: Changer en th:method -->
+                                <form th:action="@{/apprentis/{id}(id=${apprenti.id})}" th:method="delete" style="display: inline;">
                                     <button type="submit" class="btn-delete" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet apprenti ?');">
                                         Supprimer
                                     </button>

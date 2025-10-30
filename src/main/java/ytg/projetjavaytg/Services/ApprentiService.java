@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ytg.projetjavaytg.Models.Apprenti;
 import ytg.projetjavaytg.Repositories.ApprentiRepository;
+import ytg.projetjavaytg.Repositories.EvaluationRepository;
+import ytg.projetjavaytg.Repositories.VisiteRepository;
 import ytg.projetjavaytg.exception.ResourceNotFoundException;
 
 import java.time.Instant;
@@ -15,11 +17,17 @@ public class ApprentiService {
 
     private final ApprentiRepository apprentiRepository;
     private final AnneeAcademiqueService anneeAcademiqueService;
+    private final EvaluationRepository evaluationRepository;
+    private final VisiteRepository visiteRepository;
 
     public ApprentiService(ApprentiRepository apprentiRepository,
-                          AnneeAcademiqueService anneeAcademiqueService) {
+                          AnneeAcademiqueService anneeAcademiqueService,
+                          EvaluationRepository evaluationRepository,
+                          VisiteRepository visiteRepository) {
         this.apprentiRepository = apprentiRepository;
         this.anneeAcademiqueService = anneeAcademiqueService;
+        this.evaluationRepository = evaluationRepository;
+        this.visiteRepository = visiteRepository;
     }
 
     public List<Apprenti> getAllApprentis() {
@@ -57,8 +65,13 @@ public class ApprentiService {
 
     @Transactional
     public void deleteApprenti(Long id) {
+        // Vérifier que l'apprenti existe
         apprentiRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("L'apprenti que vous voulez supprimer n'existe pas" ));
+                .orElseThrow(() -> new ResourceNotFoundException("L'apprenti que vous voulez supprimer n'existe pas"));
+        // Supprimer d'abord les entités dépendantes dans la même transaction
+        evaluationRepository.deleteByApprentiId(id);
+        visiteRepository.deleteByApprentiId(id);
+        // Puis supprimer l'apprenti
         apprentiRepository.deleteById(id);
     }
 
