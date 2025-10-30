@@ -90,7 +90,7 @@ Ce document sert de trame pour remplir le rapport demandé (sections 3.1 à 3.4 
 
 ### Analyse critique de l'utilisation d'une requête SQL native (une seule fois)
 
-- Objectif de l'utilisation de SQL natif : 
+- Objectif de l'utilisation de SQL natif :
 - - Permettre de faire des requêtes personnalisées pour pouvoir avoir des résultats plus précis et ne pas avoir à trier les résultats dans le front
 - Inconvénients / risques (portabilité, sécurité, perte d'abstraction, maintenance) :
     - ne s'adapte pas automatiquement aux changements de schéma de la base de données et au SGBD
