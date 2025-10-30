@@ -72,11 +72,9 @@ public class ExcelImportService {
                 totalRows++;
                 try {
                     Apprenti apprenti = processRow(row, columnMapping);
-                    if (apprenti != null) {
-                        Apprenti created = apprentiService.createApprenti(apprenti);
-                        createdApprentis.add(created);
-                        successfulImports++;
-                    }
+                    Apprenti created = apprentiService.createApprenti(apprenti);
+                    createdApprentis.add(created);
+                    successfulImports++;
                 } catch (Exception e) {
                     errors.add("Ligne " + (i + 1) + ": " + e.getMessage());
                 }
