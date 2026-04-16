@@ -13,10 +13,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    # Provision d'un service PostgreSQL 17 pour les tests
+    # Provision d'un service PostgreSQL 15 pour les tests
     services:
       postgres:
-        image: postgres:17
+        image: postgres:15
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
